@@ -5,6 +5,7 @@ ShiobeForAndroid
 ---
 
 Twitter app for Android
+[http://www5.pf-x.net/~shiobe/index.cgi](http://www5.pf-x.net/~shiobe/index.cgi)
 
 ## Install
 ---
