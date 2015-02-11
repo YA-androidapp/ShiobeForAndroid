@@ -1,0 +1,5 @@
+<wearableApp package="jp.gr.java_conf.ya.shiobeforandroid2">
+ <versionCode>6</versionCode>
+ <versionName>1.5</versionName>
+ <rawPathResId>s4awear</rawPathResId>
+</wearableApp><!-- Copyright (c) 2013-2015 YA <ya.androidapp@gmail.com> All rights reserved. -->

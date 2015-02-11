@@ -1,0 +1,88 @@
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+    public *;
+}
+
+-keepattributes JavascriptInterface
+-keepclasseswithmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+### http://hyoromo.hatenablog.com/entry/20101120/1290216449
+
+-keep public class * extends android.app.Activity{
+    public void *(android.view.View);
+}
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+-keep public class * extends android.view.View {
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+    public void set*(...);
+}
+-keep public class **.R
+
+# Log.v
+-assumenosideeffects class android.util.Log {
+    public static *** v(...);
+    public static *** d(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+}
+
+# 
+
+-libraryjars ../google-play-services_lib/libs/google-play-services.jar
+
+# GoogleMaps
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+-keepclasseswithmembers class com.google.android.gms.** {
+    *;
+}
+-dontwarn com.google.android.gms.**
+
+## 広告
+#-keep,allowshrinking public class com.android.vending.billing.*
+#-keep public class com.google.ads.** {
+#    public protected *;
+#}
+
+# twitter4j (external library for twitter)
+-libraryjars ./libs/twitter4j-async-4.0.2.jar
+-libraryjars ./libs/twitter4j-core-4.0.2.jar
+-libraryjars ./libs/twitter4j-media-support-4.0.2.jar
+-libraryjars ./libs/twitter4j-stream-4.0.2.jar
+-dontwarn twitter4j.management.**
+-dontwarn twitter4j.TwitterAPIMonitor
+-dontwarn twitter4j.internal.**
+-dontwarn twitter4j.Annotation
+-dontwarn twitter4j.CommonsLoggingLoggerFactory
+-dontwarn twitter4j.SLF4JLogger
+-dontwarn twitter4j.SLF4JLoggerFactory
+-dontwarn org.apache.log4j.**
+-dontwarn org.apache.commons.logging.**
+-keep class javax.** { *; }
+-keep class org.** { *; }
+-keep class twitter4j.** { *; }
