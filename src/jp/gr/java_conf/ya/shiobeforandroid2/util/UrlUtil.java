@@ -24,8 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import jp.gr.java_conf.ya.shiobeforandroid2.R;
 import jp.gr.java_conf.ya.shiobeforandroid2.ListAdapter;
+import jp.gr.java_conf.ya.shiobeforandroid2.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,31 +66,11 @@ public final class UrlUtil {
 
 		pref_app = PreferenceManager.getDefaultSharedPreferences(context);
 
-		try {
-			pref_enable_httpurlconnection_follow_redirects = pref_app.getBoolean("pref_enable_httpurlconnection_follow_redirects", ListAdapter.default_enable_httpurlconnection_follow_redirects);
-		} catch (final Exception e) {
-			pref_enable_httpurlconnection_follow_redirects = ListAdapter.default_enable_httpurlconnection_follow_redirects;
-		}
-		try {
-			pref_timeout_connection_expanduri = Integer.parseInt(pref_app.getString("pref_timeout_connection_expanduri", ListAdapter.default_timeout_connection_string));
-		} catch (final Exception e) {
-			pref_timeout_connection_expanduri = ListAdapter.default_timeout_connection;
-		}
-		try {
-			pref_timeout_connection_shortenuri = Integer.parseInt(pref_app.getString("pref_timeout_connection_shortenuri", ListAdapter.default_timeout_connection_string));
-		} catch (final Exception e) {
-			pref_timeout_connection_shortenuri = ListAdapter.default_timeout_connection;
-		}
-		try {
-			pref_timeout_so_expanduri = Integer.parseInt(pref_app.getString("pref_timeout_so_expanduri", ListAdapter.default_timeout_so_string));
-		} catch (final Exception e) {
-			pref_timeout_so_expanduri = ListAdapter.default_timeout_so;
-		}
-		try {
-			pref_timeout_so_shortenuri = Integer.parseInt(pref_app.getString("pref_timeout_so_shortenuri", ListAdapter.default_timeout_so_string));
-		} catch (final Exception e) {
-			pref_timeout_so_shortenuri = ListAdapter.default_timeout_so;
-		}
+		pref_enable_httpurlconnection_follow_redirects = pref_app.getBoolean("pref_enable_httpurlconnection_follow_redirects", ListAdapter.default_enable_httpurlconnection_follow_redirects);
+		pref_timeout_connection_expanduri = ListAdapter.getPrefInt(context, "pref_timeout_connection_expanduri", ListAdapter.default_timeout_connection_string);
+		pref_timeout_connection_shortenuri = ListAdapter.getPrefInt(context, "pref_timeout_connection_shortenuri", ListAdapter.default_timeout_connection_string);
+		pref_timeout_so_expanduri = ListAdapter.getPrefInt(context, "pref_timeout_so_expanduri", ListAdapter.default_timeout_so_string);
+		pref_timeout_so_shortenuri = ListAdapter.getPrefInt(context, "pref_timeout_so_shortenuri", ListAdapter.default_timeout_so_string);
 
 		pref_tl_fontcolor_statustext_uri = pref_app.getString("pref_tl_fontcolor_statustext_uri", "#0000ff");
 		fontColorTagpart = "<font color=\"" + pref_tl_fontcolor_statustext_uri + "\">";

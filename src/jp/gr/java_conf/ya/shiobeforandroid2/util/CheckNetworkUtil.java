@@ -3,6 +3,7 @@ package jp.gr.java_conf.ya.shiobeforandroid2.util; // Copyright (c) 2013-2015 YA
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import jp.gr.java_conf.ya.shiobeforandroid2.ListAdapter;
 import jp.gr.java_conf.ya.shiobeforandroid2.R;
 import android.app.Activity;
 import android.content.Context;
@@ -59,7 +60,7 @@ public final class CheckNetworkUtil {
 			pref_enable_network_auto_reconnect_mobile = pref_app.getBoolean("pref_enable_network_auto_reconnect_mobile_autotweet", false);
 		}
 		final boolean pref_enable_networkcheck_wifi_mobile_as_wifi = pref_app.getBoolean("pref_enable_networkcheck_wifi_mobile_as_wifi", false);
-		final int pref_networkcheck_wifi_mobile_as_wifi_linkspeed_threshold = Integer.parseInt(pref_app.getString("pref_networkcheck_wifi_mobile_as_wifi_linkspeed_threshold", "27"));
+		final int pref_networkcheck_wifi_mobile_as_wifi_linkspeed_threshold = ListAdapter.getPrefInt(context, "pref_networkcheck_wifi_mobile_as_wifi_linkspeed_threshold", "27");
 
 		final String[] pref_network_wifi_ssid_exceptions = pref_network_wifi_ssid_exception.split(",");
 

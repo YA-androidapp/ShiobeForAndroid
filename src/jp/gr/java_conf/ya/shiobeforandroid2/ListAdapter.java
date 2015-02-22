@@ -296,6 +296,7 @@ public class ListAdapter extends BaseAdapter {
 	private ResponseList<UserList> sortedUserlist;
 
 	private SharedPreferences pref_app;
+	private static SharedPreferences staticPref_app;
 	private SharedPreferences pref_twtr;
 
 	private static final String API_STATUS_URL = "https://status.io.watchmouse.com/7617";
@@ -1515,7 +1516,21 @@ public class ListAdapter extends BaseAdapter {
 
 	final float getPrefFloat(final String key, final String defaultValueString) {
 		try {
+			if (pref_app == null) {
+				pref_app = PreferenceManager.getDefaultSharedPreferences(context);
+			}
 			return Float.parseFloat(pref_app.getString(key, defaultValueString));
+		} catch (final Exception e) {
+			return Float.parseFloat(defaultValueString);
+		}
+	}
+
+	public static final float getPrefFloat(final Context context, final String key, final String defaultValueString) {
+		try {
+			if (staticPref_app == null) {
+				staticPref_app = PreferenceManager.getDefaultSharedPreferences(( context != null ) ? context : staticContext);
+			}
+			return Float.parseFloat(staticPref_app.getString(key, defaultValueString));
 		} catch (final Exception e) {
 			return Float.parseFloat(defaultValueString);
 		}
@@ -1523,7 +1538,21 @@ public class ListAdapter extends BaseAdapter {
 
 	final int getPrefInt(final String key, final String defaultValueString) {
 		try {
+			if (pref_app == null) {
+				pref_app = PreferenceManager.getDefaultSharedPreferences(context);
+			}
 			return Integer.parseInt(pref_app.getString(key, defaultValueString));
+		} catch (final Exception e) {
+			return Integer.parseInt(defaultValueString);
+		}
+	}
+
+	public static final int getPrefInt(final Context context, final String key, final String defaultValueString) {
+		try {
+			if (staticPref_app == null) {
+				staticPref_app = PreferenceManager.getDefaultSharedPreferences(( context != null ) ? context : staticContext);
+			}
+			return Integer.parseInt(staticPref_app.getString(key, defaultValueString));
 		} catch (final Exception e) {
 			return Integer.parseInt(defaultValueString);
 		}

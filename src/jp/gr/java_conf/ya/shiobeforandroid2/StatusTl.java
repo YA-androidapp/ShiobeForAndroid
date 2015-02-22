@@ -65,7 +65,7 @@ public final class StatusTl extends Activity {
 
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 
-		final int pref_screen_orientation_timeline = Integer.parseInt(pref_app.getString("pref_screen_orientation_timeline", "0"));
+		final int pref_screen_orientation_timeline = ListAdapter.getPrefInt(this, "pref_screen_orientation_timeline", "0");
 		switch (pref_screen_orientation_timeline) {
 		default:
 			break;
@@ -99,12 +99,7 @@ public final class StatusTl extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		final float dpi = metrics.density; // DPIの取得
 		final boolean pref_enable_singleline = pref_app.getBoolean("pref_enable_singleline", false);
-		int pref_header_height = -1;
-		try {
-			pref_header_height = Integer.parseInt(pref_app.getString("pref_header_height", "-1"));
-		} catch (final Exception e) {
-			pref_header_height = -1;
-		}
+		final int pref_header_height = ListAdapter.getPrefInt(this, "pref_header_height", "-1");
 		float pref_tl_fontsize = Float.parseFloat(pref_app.getString("pref_tl_fontsize", "14"));
 		final int pref_tl_iconsize1 = (int) ( pref_tl_fontsize * dpi * ( ( pref_enable_singleline ) ? 2.0f : ( 4.0f * Float.parseFloat(pref_app.getString("pref_tl_iconsize", "1")) ) ) ); // pref_enable_singleline pref_tl_fontsize
 

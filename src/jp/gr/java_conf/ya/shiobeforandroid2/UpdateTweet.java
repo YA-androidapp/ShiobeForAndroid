@@ -284,7 +284,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 	}
 
 	private final void button1Clicked() {
-		int pref_user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
+		int pref_user_index_size = ListAdapter.getPrefInt(this, "pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size));
 		if (pref_user_index_size < ListAdapter.default_user_index_size) {
 			pref_user_index_size = ListAdapter.default_user_index_size;
 		}
@@ -1762,14 +1762,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		} else {
 			pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 			final boolean pref_capture_thumbnail_use_picturelistener = pref_app.getBoolean("pref_capture_thumbnail_use_picturelistener", ListAdapter.default_capture_thumbnail_use_picturelistener);
-			int pref_timeout_connection;
-			try {
-				pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-				WriteLog.write(this, "pref_timeout_connection: " + pref_timeout_connection);
-			} catch (final Exception e) {
-				pref_timeout_connection = ListAdapter.default_timeout_connection;
-				WriteLog.write(this, "pref_timeout_connection: " + pref_timeout_connection);
-			}
+			int pref_timeout_connection = ListAdapter.getPrefInt(this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
 			final int pref_timeout_connection2 = pref_timeout_connection;
 			runOnUiThread(new Runnable() {
 				@Override
@@ -1906,12 +1899,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 	private final long getNtpOffset() {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 		final String pref_ntp_server = pref_app.getString("pref_ntp_server", ListAdapter.default_ntp_server);
-		int pref_timeout_ntp_server;
-		try {
-			pref_timeout_ntp_server = Integer.parseInt(pref_app.getString("pref_timeout_ntp_server", ListAdapter.default_timeout_ntp_server_string));
-		} catch (final Exception e) {
-			pref_timeout_ntp_server = ListAdapter.default_timeout_ntp_server;
-		}
+		int pref_timeout_ntp_server = ListAdapter.getPrefInt(this, "pref_timeout_ntp_server", ListAdapter.default_timeout_ntp_server_string);
 
 		final SntpClientOffset client = new SntpClientOffset();
 		if (client.requestTime(pref_ntp_server, pref_timeout_ntp_server)) {
@@ -2153,11 +2141,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			} catch (final OutOfMemoryError oom2) {
 				pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 				final boolean pref_pictureappended_oome_argb4444 = pref_app.getBoolean("pref_pictureappended_oome_argb4444", false);
-				int pref_pictureappended_oome_insamplesize = 2;
-				try {
-					pref_pictureappended_oome_insamplesize = Integer.parseInt(pref_app.getString("pref_pictureappended_oome_insamplesize", "2"));
-				} catch (final Exception e) {
-				}
+				final int pref_pictureappended_oome_insamplesize = ListAdapter.getPrefInt(this, "pref_pictureappended_oome_insamplesize", "2");
 
 				try {
 					final BitmapFactory.Options bmfOptions = new BitmapFactory.Options();
@@ -2231,7 +2215,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 
 	private final void init_location() {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
-		final int pref_locationinfo_mintime = Integer.parseInt(pref_app.getString("pref_locationinfo_mintime", "300000"));
+		final int pref_locationinfo_mintime = ListAdapter.getPrefInt(this, "pref_locationinfo_mintime", "300000");
 		WriteLog.write(UpdateTweet.this, "requestLocationUpdates() pref_locationinfo_mintime: " + pref_locationinfo_mintime);
 
 		new Thread(new Runnable() {
@@ -2334,19 +2318,8 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		final boolean pref_enable_cooperation_url = pref_app.getBoolean("pref_enable_cooperation_url", false);
 		if (pref_enable_cooperation_url) {
 			final String pref_cooperation_url = pref_app.getString("pref_cooperation_url", ListAdapter.default_cooperation_url);
-			int pref_timeout_connection;
-			try {
-				pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-			} catch (final Exception e) {
-				pref_timeout_connection = ListAdapter.default_timeout_connection;
-			}
-			int pref_timeout_so;
-			try {
-				pref_timeout_so = Integer.parseInt(pref_app.getString("pref_timeout_so", ListAdapter.default_timeout_so_string));
-			} catch (final Exception e) {
-				WriteLog.write(this, e);
-				pref_timeout_so = ListAdapter.default_timeout_connection;
-			}
+			int pref_timeout_connection = ListAdapter.getPrefInt(this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
+			int pref_timeout_so = ListAdapter.getPrefInt(this, "pref_timeout_so", ListAdapter.default_timeout_so_string);
 
 			final String app_uri_setting = pref_cooperation_url + "autocomplete_shiobe.php?id=";
 			final String screenName = adapter.checkScreennameFromIndex(index);
@@ -2392,9 +2365,9 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 
 		//		WriteLog.write(this, "init_user_oauth(): index: " + Integer.toString(index));
 
-		pref_timeout_t4j_connection = Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
+		pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
 		//		WriteLog.write(this, "init_user_oauth(): pref_timeout_t4j_connection: " + pref_timeout_t4j_connection);
-		pref_timeout_t4j_read = Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
+		pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 		//		WriteLog.write(this, "init_user_oauth(): pref_timeout_t4j_read: " + pref_timeout_t4j_read);
 
 		pref_pictureUploadSite = pref_app.getString("pref_pictureuploadsite", MediaProvider.TWITTER.toString());
@@ -2548,12 +2521,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 	private final void loadWebpage(final String uri) {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 
-		int pref_timeout_connection;
-		try {
-			pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-		} catch (final Exception e) {
-			pref_timeout_connection = ListAdapter.default_timeout_connection;
-		}
+		int pref_timeout_connection = ListAdapter.getPrefInt(this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
 		final long pref_timeout_connection2 =
 				( ( uri.startsWith(ListAdapter.app_uri_about) ) || ( uri.equals(ListAdapter.app_uri_local) ) ) ? ( pref_timeout_connection / 5 ) : pref_timeout_connection;
 
@@ -2635,7 +2603,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		loadWebpageInit();
 		if (capture_thumbnail_use_picturelistener) {
 			try {
-				capture_thumbnail_retry = Integer.parseInt(pref_app.getString("pref_capture_thumbnail_retry", Integer.toString(ListAdapter.default_capture_thumbnail_retry)));
+				capture_thumbnail_retry = ListAdapter.getPrefInt(this, "pref_capture_thumbnail_retry", Integer.toString(ListAdapter.default_capture_thumbnail_retry));
 				WriteLog.write(UpdateTweet.this, "(pref_capture_thumbnail_use_picturelistener)" + " pref_capture_thumbnail_retry:" + capture_thumbnail_retry + " default_capture_thumbnail_retry:"
 						+ ListAdapter.default_capture_thumbnail_retry);
 			} catch (final Exception e) {
@@ -2910,8 +2878,15 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		setTextColorOnTextChanged();
 		if (pref_tl_fontcolor_text_updatetweet.equals("") == false) {
 			try {
+				//				button1.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet_button_tweet));
+				button2.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet_button_tweet));
+				//				editText1.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
+				//				editText2.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
+				//				editText3.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
 				editText4.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
 				editText5.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
+				textView1.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
+				textView2.setTextColor(Color.parseColor(pref_tl_fontcolor_text_updatetweet));
 			} catch (final IllegalArgumentException e) {
 			}
 		}
@@ -2952,76 +2927,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		button1.setOnLongClickListener(this);
 		button2.setOnLongClickListener(this);
 
-		//		button1.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public final void onClick(View v) {
-		//				int pref_user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
-		//				if (pref_user_index_size < ListAdapter.default_user_index_size) {
-		//					pref_user_index_size = ListAdapter.default_user_index_size;
-		//				}
-		//
-		//				pref_twtr = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
-		//				final int index = adapter.checkIndexFromPrefTwtr();
-		//				final int offset = 1;
-		//				final String[] ITEM = new String[pref_user_index_size + offset];
-		//				final String current_name = pref_twtr.getString("screen_name_" + index, "");
-		//				final String current_oauth_token = pref_twtr.getString("oauth_token_" + index, "");
-		//				ITEM[0] = getString(R.string.tweet_current_account);
-		//				String itemname;
-		//				for (int i = 0; i < pref_user_index_size; i++) {
-		//					itemname = pref_twtr.getString("screen_name_" + i, "");
-		//
-		//					if (itemname.equals("")) {
-		//						ITEM[i + offset] = "  - ";
-		//					} else if (( itemname.equals(current_name) ) && ( ( pref_twtr.getString("oauth_token_" + i, "") ).equals(current_oauth_token) )) {
-		//						ITEM[i + offset] = "Current: @" + itemname;
-		//					} else {
-		//						ITEM[i + offset] = " @" + itemname;
-		//					}
-		//				}
-		//				new AlertDialog.Builder(UpdateTweet.this).setTitle(R.string.changeaccount).setItems(ITEM, new DialogInterface.OnClickListener() {
-		//					@Override
-		//					public final void onClick(final DialogInterface dialog, final int which) {
-		//						final SharedPreferences.Editor editor = pref_twtr.edit();
-		//						if (( which >= offset ) && ( ITEM[which].equals("  - ") == false )) {
-		//							editor.putString("index", Integer.toString(which - offset));
-		//							editor.commit();
-		//							init_user(which - offset);
-		//							adapter.toast(getString(R.string.userinit) + " @" + adapter.checkScreennameFromIndex(adapter.checkIndexFromPrefTwtr()));
-		//						} else if (which == 0) {
-		//							tweet_button();
-		//						}
-		//					}
-		//				}).create().show();
-		//				runOnUiThread(new Runnable() {
-		//					@Override
-		//					public final void run() {
-		//						webView1.setVisibility(View.GONE);
-		//					}
-		//				});
-		//			}
-		//		});
-		//		button1.setOnLongClickListener(new View.OnLongClickListener() {
-		//			@Override
-		//			public boolean onLongClick(View v) {
-		//				tweet_button();
-		//				return true;
-		//			}
-		//		});
-		//		button2.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public void onClick(View v) {
-		//				//
-		//			}
-		//		});
-		//		button2.setOnLongClickListener(new View.OnLongClickListener() {
-		//			@Override
-		//			public final boolean onLongClick(View v) {
-		//				tweet_button();
-		//				return true;
-		//			}
-		//		});
-
 		editText1.addTextChangedListener(new TextWatcher() {
 			@Override
 			public final void afterTextChanged(Editable s) {
@@ -3042,12 +2947,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			}
 		});
 		editText1.setOnFocusChangeListener(this);
-		//		editText1.setOnFocusChangeListener(new OnFocusChangeListener() {
-		//			@Override
-		//			public final void onFocusChange(final View arg0, final boolean arg1) {
-		//				setTextColorOnTextChanged();
-		//			}
-		//		});
 		editText2.addTextChangedListener(new TextWatcher() {
 			@Override
 			public final void afterTextChanged(final Editable s) {
@@ -3064,12 +2963,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			}
 		});
 		editText2.setOnFocusChangeListener(this);
-		//		editText2.setOnFocusChangeListener(new OnFocusChangeListener() {
-		//			@Override
-		//			public final void onFocusChange(final View arg0, final boolean arg1) {
-		//				setTextColorOnTextChanged();
-		//			}
-		//		});
 		editText3.addTextChangedListener(new TextWatcher() {
 			@Override
 			public final void afterTextChanged(final Editable s) {
@@ -3086,12 +2979,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			}
 		});
 		editText3.setOnFocusChangeListener(this);
-		//		editText3.setOnFocusChangeListener(new OnFocusChangeListener() {
-		//			@Override
-		//			public final void onFocusChange(final View arg0, final boolean arg1) {
-		//				setTextColorOnTextChanged();
-		//			}
-		//		});
 		editText4.addTextChangedListener(new TextWatcher() {
 			@Override
 			public final void afterTextChanged(final Editable s) {
@@ -3108,12 +2995,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			}
 		});
 		editText4.setOnFocusChangeListener(this);
-		//		editText4.setOnFocusChangeListener(new OnFocusChangeListener() {
-		//			@Override
-		//			public final void onFocusChange(final View arg0, final boolean arg1) {
-		//				checkLocationinfoException(editText4, editText5);
-		//			}
-		//		});
 		editText5.addTextChangedListener(new TextWatcher() {
 			@Override
 			public final void afterTextChanged(final Editable s) {
@@ -3130,46 +3011,9 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			}
 		});
 		editText5.setOnFocusChangeListener(this);
-		//		editText5.setOnFocusChangeListener(new OnFocusChangeListener() {
-		//			@Override
-		//			public final void onFocusChange(final View arg0, final boolean arg1) {
-		//				checkLocationinfoException(editText4, editText5);
-		//			}
-		//		});
 		imageView1.setOnClickListener(this);
-		//		imageView1.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public final void onClick(final View v) {
-		//				picture_share();
-		//			}
-		//		});
 		textView1.setOnClickListener(this);
-		//		textView1.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public final void onClick(final View v) {
-		//				runOnUiThread(new Runnable() {
-		//					@Override
-		//					public final void run() {
-		//						textView1.setText(simpleDateFormat.format(new Date(( System.currentTimeMillis() + getNtpOffset() ))));
-		//					}
-		//				});
-		//			}
-		//		});
 		textView2.setOnClickListener(this);
-		//		textView2.setOnClickListener(new OnClickListener() {
-		//			@Override
-		//			public final void onClick(final View v) {
-		//				final Status justbeforeTweet = adapter.getjustbefore(adapter.checkIndexFromPrefTwtr());
-		//				if (justbeforeTweet != null) {
-		//					runOnUiThread(new Runnable() {
-		//						@Override
-		//						public final void run() {
-		//							textView2.setText(justbeforeTweet.getText() + " " + adapter.DFu.format(justbeforeTweet.getCreatedAt()));
-		//						}
-		//					});
-		//				}
-		//			}
-		//		});
 		webView1.setVisibility(View.GONE);
 
 		// etc
@@ -3197,16 +3041,8 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 				WriteLog.write(UpdateTweet.this, "99-" + logk + ": first_run");
 
 				// タイムアウト
-				try {
-					pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-				} catch (final Exception e) {
-					pref_timeout_connection = ListAdapter.default_timeout_connection;
-				}
-				try {
-					pref_timeout_so = Integer.parseInt(pref_app.getString("pref_timeout_so", ListAdapter.default_timeout_so_string));
-				} catch (final Exception e) {
-					pref_timeout_so = ListAdapter.default_timeout_connection;
-				}
+				pref_timeout_connection = ListAdapter.getPrefInt(UpdateTweet.this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
+				pref_timeout_so = ListAdapter.getPrefInt(UpdateTweet.this, "pref_timeout_so", ListAdapter.default_timeout_so_string);
 				WriteLog.write(UpdateTweet.this, "99-" + logk + ": timeout");
 
 				// URL展開
@@ -3221,11 +3057,11 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 				capture_thumbnail_webview_width = displayMetrics1.widthPixels;
 				capture_thumbnail_webview_height = displayMetrics1.heightPixels;
 				try {
-					if (Integer.parseInt(pref_app.getString("pref_capture_thumbnail_webview_height", "0")) > 0) {
-						capture_thumbnail_webview_height = Integer.parseInt(pref_app.getString("pref_capture_thumbnail_webview_height", "0"));
+					if (ListAdapter.getPrefInt(UpdateTweet.this, "pref_capture_thumbnail_webview_height", "0") > 0) {
+						capture_thumbnail_webview_height = ListAdapter.getPrefInt(UpdateTweet.this, "pref_capture_thumbnail_webview_height", "0");
 					}
-					if (Integer.parseInt(pref_app.getString("pref_capture_thumbnail_webview_width", "0")) > 0) {
-						capture_thumbnail_webview_width = Integer.parseInt(pref_app.getString("pref_capture_thumbnail_webview_width", "0"));
+					if (ListAdapter.getPrefInt(UpdateTweet.this, "pref_capture_thumbnail_webview_width", "0") > 0) {
+						capture_thumbnail_webview_width = ListAdapter.getPrefInt(UpdateTweet.this, "pref_capture_thumbnail_webview_width", "0");
 					}
 				} catch (final NumberFormatException e) {
 					WriteLog.write(UpdateTweet.this, e);
@@ -3240,7 +3076,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 				if (pref_tl_fontfilename.equals("") == false) {
 					final FontUtil fontUtil = new FontUtil();
 					fontUtil.loadFont(pref_tl_fontfilename, UpdateTweet.this);
-
 					runOnUiThread(new Runnable() {
 						@Override
 						public final void run() {
@@ -3250,6 +3085,35 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 							fontUtil.setFont(editText3, UpdateTweet.this);
 							fontUtil.setFont(editText4, UpdateTweet.this);
 							fontUtil.setFont(editText5, UpdateTweet.this);
+							fontUtil.setFont(textView1, UpdateTweet.this);
+							fontUtil.setFont(textView2, UpdateTweet.this);
+						}
+					});
+				}
+				final float pref_tl_fontsize_updatetweet = ListAdapter.getPrefFloat(UpdateTweet.this, "pref_tl_fontsize", "14");
+				if (pref_tl_fontsize_updatetweet > 0) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public final void run() {
+							// 99-2-2 入力欄文字サイズを指定
+							editText1.setTextSize(pref_tl_fontsize_updatetweet);
+							editText2.setTextSize(pref_tl_fontsize_updatetweet);
+							editText3.setTextSize(pref_tl_fontsize_updatetweet);
+							editText4.setTextSize(pref_tl_fontsize_updatetweet);
+							editText5.setTextSize(pref_tl_fontsize_updatetweet);
+							textView1.setTextSize(pref_tl_fontsize_updatetweet);
+							textView2.setTextSize(pref_tl_fontsize_updatetweet);
+						}
+					});
+				}
+				final float pref_tl_fontsize_updatetweet_button = ListAdapter.getPrefFloat(UpdateTweet.this, "pref_tl_fontsize", "12");
+				if (pref_tl_fontsize_updatetweet_button > 0) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public final void run() {
+							// 99-2-3 ボタン文字サイズを指定
+							button1.setTextSize(pref_tl_fontsize_updatetweet_button);
+							button2.setTextSize(pref_tl_fontsize_updatetweet_button);
 						}
 					});
 				}
@@ -3262,11 +3126,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 					simpleDateFormat = new SimpleDateFormat(pref_show_datetime_format, Locale.JAPAN);
 				} catch (final Exception e) {
 				}
-				int pref_show_datetime_interval = 500;
-				try {
-					pref_show_datetime_interval = Integer.parseInt(pref_app.getString("pref_show_datetime_interval", "500"));
-				} catch (final Exception e) {
-				}
+				int pref_show_datetime_interval = ListAdapter.getPrefInt(UpdateTweet.this, "pref_show_datetime_interval", "500");
 
 				// 要接続
 				final boolean connected = checkNetworkUtil.isConnected();
@@ -3712,18 +3572,8 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 				@Override
 				public final boolean onMenuItemClick(final MenuItem item1) {
 					if (( ( editText1.getText().toString() ).equals("") == false ) || ( ( editText3.getText().toString() ).equals("") == false )) {
-						int pref_timeout_connection;
-						try {
-							pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-						} catch (final Exception e) {
-							pref_timeout_connection = ListAdapter.default_timeout_connection;
-						}
-						int pref_timeout_so;
-						try {
-							pref_timeout_so = Integer.parseInt(pref_app.getString("pref_timeout_so", ListAdapter.default_timeout_so_string));
-						} catch (final Exception e) {
-							pref_timeout_so = ListAdapter.default_timeout_connection;
-						}
+						final int pref_timeout_connection = ListAdapter.getPrefInt(UpdateTweet.this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
+						final int pref_timeout_so = ListAdapter.getPrefInt(UpdateTweet.this, "pref_timeout_so", ListAdapter.default_timeout_so_string);
 						if (oauthToken.equals("")) {
 							pref_twtr = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
 							init_user(adapter.checkIndexFromPrefTwtr());
@@ -4258,12 +4108,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 	@Override
 	protected final void onPause() {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
-		int pref_show_datetime_interval;
-		try {
-			pref_show_datetime_interval = Integer.parseInt(pref_app.getString("pref_show_datetime_interval", "500"));
-		} catch (final Exception e) {
-			pref_show_datetime_interval = 500;
-		}
+		final int pref_show_datetime_interval = ListAdapter.getPrefInt(this, "pref_show_datetime_interval", "500");
 		if (pref_show_datetime_interval > -1) {
 			if (scheduledFuture != null) {
 				scheduledFuture.cancel(true);
@@ -4755,7 +4600,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 
 	private final void setOrientation() {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
-		switch (Integer.parseInt(pref_app.getString("pref_screen_orientation_tweet", "0"))) {
+		switch (ListAdapter.getPrefInt(this, "pref_screen_orientation_tweet", "0")) {
 		default:
 			break;
 		case 0:
@@ -4847,13 +4692,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		if (( editText4.getText().equals("") == false ) && ( editText5.getText().equals("") == false )) {
 			try {
 				pref_app = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
-				int pref_map_zoom;
-				try {
-					pref_map_zoom = Integer.parseInt(pref_app.getString("pref_map_zoom", "20"));
-				} catch (final ClassCastException e) {
-					WriteLog.write(this, e);
-					pref_map_zoom = 0;
-				}
+				int pref_map_zoom = ListAdapter.getPrefInt(this, "pref_map_zoom", "20");
 
 				String geo_uri = "geo:" + editText4.getText() + "," + editText5.getText();
 				if (( pref_map_zoom > 0 ) && ( pref_map_zoom < 24 )) {
@@ -4970,7 +4809,8 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 				init_user_oauth(index);
 				WriteLog.write(UpdateTweet.this, "tweet() userinit_oauth(" + indexStr + ")");
 
-				final long pref_notification_duration_done_tweet = adapter.getPrefInt("pref_notification_duration_done_tweet", Integer.toString(ListAdapter.default_notification_duration_done_tweet));
+				final long pref_notification_duration_done_tweet =
+						ListAdapter.getPrefInt(UpdateTweet.this, "pref_notification_duration_done_tweet", Integer.toString(ListAdapter.default_notification_duration_done_tweet));
 
 				final boolean pref_enable_notification_done_tweet = pref_app.getBoolean("pref_enable_notification_done_tweet", true);
 				final boolean pref_enable_notification_vibration_done_tweet = pref_app.getBoolean("pref_enable_notification_vibration_done_tweet", false);

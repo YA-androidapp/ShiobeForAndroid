@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public final class FontUtil {
@@ -19,7 +20,11 @@ public final class FontUtil {
 	private Typeface font;
 
 	private final Typeface getFont() {
-		return ( font == null ) ? Typeface.DEFAULT : font;
+		try {
+			return ( font == null ) ? Typeface.DEFAULT : font;
+		} catch (Exception e) {
+			return Typeface.DEFAULT;
+		}
 	}
 
 	private final Typeface getFontFromZip(final String fontFileName, final Context context) {
@@ -105,10 +110,42 @@ public final class FontUtil {
 		return ret;
 	}
 
+	private final Typeface getTypeface(final String pref_tl_fontfamily_name) {
+		switch (Integer.parseInt(pref_tl_fontfamily_name)) {
+		case 0:
+			return Typeface.DEFAULT;
+		case 1:
+			return Typeface.DEFAULT_BOLD;
+		case 2:
+			return Typeface.SANS_SERIF;
+		case 3:
+			return Typeface.SERIF;
+		case 4:
+			return Typeface.MONOSPACE;
+		default:
+			return Typeface.DEFAULT;
+		}
+	}
+
 	public final void loadFont(final String fontFileName, final Context context) {
 		try {
 			font = getFontFromZip(fontFileName, context);
 		} catch (final Exception e) {
+		}
+	}
+
+	public final void setFont(EditText editText, Context context) {
+		final SharedPreferences pref_app = PreferenceManager.getDefaultSharedPreferences(context);
+		final String pref_tl_fontfilename = pref_app.getString("pref_tl_fontfilename", "");
+		final String pref_tl_fontfamily_name = pref_app.getString("pref_tl_fontfamily_name", "0");
+		final String pref_tl_fontstyle_name = pref_app.getString("pref_tl_fontstyle_name", "0");
+
+		if (pref_tl_fontfilename.equals("") == false) {
+			final Typeface typeface = getFont();
+			editText.setTypeface(typeface);
+		} else if (pref_tl_fontfamily_name.equals("0") == false) {
+			final Typeface typeface = getTypeface(pref_tl_fontfamily_name);
+			editText.setTypeface(( ( pref_tl_fontstyle_name.equals("0") ) ? typeface : ( Typeface.create(typeface, Integer.parseInt(pref_tl_fontstyle_name)) ) ));
 		}
 	}
 
@@ -119,38 +156,10 @@ public final class FontUtil {
 		final String pref_tl_fontstyle_name = pref_app.getString("pref_tl_fontstyle_name", "0");
 
 		if (pref_tl_fontfilename.equals("") == false) {
-			Typeface typeface;
-			try {
-				typeface = getFont();
-			} catch (final Exception e) {
-				typeface = null;
-				WriteLog.write(context, e);
-			}
-			if (typeface != null) {
-				textView.setTypeface(typeface);
-			}
+			final Typeface typeface = getFont();
+			textView.setTypeface(typeface);
 		} else if (pref_tl_fontfamily_name.equals("0") == false) {
-			Typeface typeface;
-			switch (Integer.parseInt(pref_tl_fontfamily_name)) {
-			case 0:
-				typeface = Typeface.DEFAULT;
-				break;
-			case 1:
-				typeface = Typeface.DEFAULT_BOLD;
-				break;
-			case 2:
-				typeface = Typeface.SANS_SERIF;
-				break;
-			case 3:
-				typeface = Typeface.SERIF;
-				break;
-			case 4:
-				typeface = Typeface.MONOSPACE;
-				break;
-			default:
-				typeface = Typeface.DEFAULT;
-				break;
-			}
+			final Typeface typeface = getTypeface(pref_tl_fontfamily_name);
 			textView.setTypeface(( ( pref_tl_fontstyle_name.equals("0") ) ? typeface : ( Typeface.create(typeface, Integer.parseInt(pref_tl_fontstyle_name)) ) ));
 		}
 	}

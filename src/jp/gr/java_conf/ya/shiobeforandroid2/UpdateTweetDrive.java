@@ -114,7 +114,7 @@ public final class UpdateTweetDrive extends Activity implements LocationListener
 							}
 							WriteLog.write(UpdateTweetDrive.this, "requestLocationUpdates() provider: " + provider);
 
-							final int pref_locationinfo_mintime = Integer.parseInt(pref_app.getString("pref_locationinfo_mintime", "300000"));
+							final int pref_locationinfo_mintime = ListAdapter.getPrefInt(UpdateTweetDrive.this, "pref_locationinfo_mintime", "300000");
 							try {
 								runOnUiThread(new Runnable() {
 									@Override

@@ -355,6 +355,7 @@
     <string name="follow_destroy_by">でフォローを外す</string>
     <string name="fontcolor">文字色</string>
     <string name="fontsize">フォントサイズ</string>
+    <string name="fontsize_updatetweet">フォントサイズ(投稿画面)</string>
     <string name="friendship">フォロー／リムーブ</string>
     <string name="get_blockusers">ブロックしているユーザーの情報を更新</string>
     <string name="get_colors">TLの配色をTwitter公式と揃える</string>
@@ -792,6 +793,8 @@
     <string name="tl_fontsize_small_old_retweet">古いリツイート</string>
     <string name="tl_fontsize_small_source">クライアント</string>
     <string name="tl_fontsize_small_username">ユーザー名</string>
+    <string name="tl_fontsize_updatetweet">投稿画面</string>
+    <string name="tl_fontsize_updatetweet_button">投稿ボタン</string>
     <string name="tl_fontstyle_name">フォントスタイル名</string>
     <string name="tl_iconsize">アイコンサイズ</string>
     <string name="tl_imagesize">インライン画像サイズ</string>

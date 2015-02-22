@@ -178,16 +178,16 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 			WriteLog.write(this, "getListStatus() uriString: " + uriString + " tag: " + tag);
 
 			if (( uriString.replace("(s)", "").equals("https://twitter.com") ) || ( uriString.replace("(s)", "").equals(ListAdapter.TWITTER_BASE_URI) )) {
-				final int pref_home_count = isMobile ? Integer.parseInt(pref_app.getString("pref_home_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_home_count", "200"));
+				final int pref_home_count = isMobile ? ListAdapter.getPrefInt(this, "pref_home_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_home_count", "200");
 				paging.setCount(pref_home_count);
 				return adapter.getTwitter(adapter.checkIndexFromPrefTwtr(), false).getHomeTimeline(paging);
 			} else if (tag.replace("(s)", "").equals("home")) {
-				final int pref_home_count = isMobile ? Integer.parseInt(pref_app.getString("pref_home_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_home_count", "200"));
+				final int pref_home_count = isMobile ? ListAdapter.getPrefInt(this, "pref_home_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_home_count", "200");
 				paging.setCount(pref_home_count);
 				final String screenName = uriString.replace("(s)", "").replace(ListAdapter.TWITTER_BASE_URI, "").replace("#home", "").replace("#h", "");
 				return adapter.getTwitter(adapter.checkIndexFromScreenname(screenName), false).getHomeTimeline(paging);
 			} else if (tag.replace("(s)", "").equals("mention")) {
-				final int pref_mention_count = isMobile ? Integer.parseInt(pref_app.getString("pref_mention_count_mobile", "20")) : Integer.parseInt(pref_app.getString("pref_mention_count", "20"));
+				final int pref_mention_count = isMobile ? ListAdapter.getPrefInt(this, "pref_mention_count_mobile", "20") : ListAdapter.getPrefInt(this, "pref_mention_count", "20");
 				paging.setCount(pref_mention_count);
 				final String screenName = uriString.replace("(s)", "").replace(ListAdapter.TWITTER_BASE_URI, "").replace("#mention", "").replace("#m", "");
 				return adapter.getTwitter(adapter.checkIndexFromScreenname(screenName), false).getMentionsTimeline(paging);
@@ -199,7 +199,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 				}
 				final String query = adapter.getQuery(uriString.replace("(s)", ""));
 				q.setQuery(query);
-				final int pref_search_count = isMobile ? Integer.parseInt(pref_app.getString("pref_search_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_search_count", "200"));
+				final int pref_search_count = isMobile ? ListAdapter.getPrefInt(this, "pref_search_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_search_count", "200");
 				q.setCount(pref_search_count);
 				if (sinceId > 0) {
 					q.setSinceId(sinceId);
@@ -208,18 +208,17 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 				}
 				return adapter.getTwitter(adapter.checkIndexFromPrefTwtr(), false).search(q).getTweets();
 			} else if (tag.replace("(s)", "").equals("user")) {
-				final int pref_user_count = isMobile ? Integer.parseInt(pref_app.getString("pref_user_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_user_count", "200"));
+				final int pref_user_count = isMobile ? ListAdapter.getPrefInt(this, "pref_user_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_user_count", "200");
 				paging.setCount(pref_user_count);
 				final String screenName = uriString.replace("(s)", "").replace(ListAdapter.TWITTER_BASE_URI, "");
 				return adapter.getTwitter(adapter.checkIndexFromScreenname(screenName), false).getUserTimeline(screenName, paging);
 			} else if (tag.replace("(s)", "").equals("userfav")) {
-				final int pref_userfav_count = isMobile ? Integer.parseInt(pref_app.getString("pref_userfav_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_userfav_count", "200"));
+				final int pref_userfav_count = isMobile ? ListAdapter.getPrefInt(this, "pref_userfav_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_userfav_count", "200");
 				paging.setCount(pref_userfav_count);
 				final String screenName = uriString.replace("(s)", "").replace(ListAdapter.TWITTER_BASE_URI, "").replace("#favorite", "").replace("#f", "");
 				return adapter.getTwitter(adapter.checkIndexFromScreenname(screenName), false).getFavorites(screenName, paging);
 			} else if (tag.replace("(s)", "").equals("userlist")) {
-				final int pref_userlist_count =
-						isMobile ? Integer.parseInt(pref_app.getString("pref_userlist_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_userlist_count", "200"));
+				final int pref_userlist_count = isMobile ? ListAdapter.getPrefInt(this, "pref_userlist_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_userlist_count", "200");
 				paging.setCount(pref_userlist_count);
 				final String uriStringReplaced = uriString.replace("(s)", "").replace(ListAdapter.TWITTER_BASE_URI, "");
 				final String[] screenNameAndListName = uriStringReplaced.split("/lists/");
@@ -268,7 +267,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 				}
 				return statuses;
 			}
-			final int pref_home_count = isMobile ? Integer.parseInt(pref_app.getString("pref_home_count_mobile", "50")) : Integer.parseInt(pref_app.getString("pref_home_count", "200"));
+			final int pref_home_count = isMobile ? ListAdapter.getPrefInt(this, "pref_home_count_mobile", "50") : ListAdapter.getPrefInt(this, "pref_home_count", "200");
 			paging.setCount(pref_home_count);
 			return adapter.getTwitter(adapter.checkIndexFromPrefTwtr(), false).getHomeTimeline(paging);
 		} catch (final NumberFormatException e) {
@@ -277,22 +276,6 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 			WriteLog.write(Tl.this, e);
 		}
 		return null;
-	}
-
-	private final float getPrefFloat(final String key, final String defaultValueString) {
-		try {
-			return Float.parseFloat(pref_app.getString(key, defaultValueString));
-		} catch (final Exception e) {
-			return Float.parseFloat(defaultValueString);
-		}
-	}
-
-	private final int getPrefInt(final String key, final String defaultValueString) {
-		try {
-			return Integer.parseInt(pref_app.getString(key, defaultValueString));
-		} catch (final Exception e) {
-			return Integer.parseInt(defaultValueString);
-		}
 	}
 
 	private final long getTlMaxId() {
@@ -336,8 +319,8 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 		playRingtone(TAG);
 
 		pref_enable_tts = pref_app.getBoolean("pref_enable_tts", false);
-		pref_tts_set_pitch = Float.parseFloat(pref_app.getString("pref_tts_set_pitch", "1.0f"));
-		pref_tts_set_rate = Float.parseFloat(pref_app.getString("pref_tts_set_rate", "1.0f"));
+		pref_tts_set_pitch = ListAdapter.getPrefFloat(this, "pref_tts_set_pitch", "1.0f");
+		pref_tts_set_rate = ListAdapter.getPrefFloat(this, "pref_tts_set_rate", "1.0f");
 
 		if (pref_enable_tts) {
 			if (tts == null) {
@@ -358,9 +341,9 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		final float dpi = metrics.density; // DPIの取得
 		final boolean pref_enable_singleline = pref_app.getBoolean("pref_enable_singleline", false);
-		final int pref_header_height = getPrefInt("pref_header_height", "-1");
-		final float pref_tl_fontsize = getPrefFloat("pref_tl_fontsize", "14");
-		final int pref_tl_iconsize1 = (int) ( pref_tl_fontsize * dpi * ( ( pref_enable_singleline ) ? 2.0f : ( 4.0f * Float.parseFloat(pref_app.getString("pref_tl_iconsize", "1")) ) ) ); // pref_enable_singleline pref_tl_fontsize
+		final int pref_header_height = ListAdapter.getPrefInt(this, "pref_header_height", "-1");
+		final float pref_tl_fontsize = ListAdapter.getPrefFloat(this, "pref_tl_fontsize", "14");
+		final int pref_tl_iconsize1 = (int) ( pref_tl_fontsize * dpi * ( ( pref_enable_singleline ) ? 2.0f : ( 4.0f * ListAdapter.getPrefFloat(this, "pref_tl_iconsize", "1") ) ) ); // pref_enable_singleline pref_tl_fontsize
 
 		final String pref_header_bgcolor = pref_app.getString("pref_header_bgcolor", "#000000");
 		final String pref_tl_bgcolor_buttons = pref_app.getString("pref_tl_bgcolor_buttons", "#000000");
@@ -455,7 +438,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 
 		// トークンの読み込み
-		final int user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
+		final int user_index_size = ListAdapter.getPrefInt(this, "pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size));
 
 		try {
 			currentIndex = Integer.parseInt(intent1.getStringExtra("index"));
@@ -483,7 +466,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 			updateStatusesStr(uriString);
 		}
 
-		final int pref_tl_interval = Integer.parseInt(pref_app.getString("pref_tl_interval", Integer.toString(ListAdapter.default_pref_tl_interval)));
+		final int pref_tl_interval = ListAdapter.getPrefInt(this, "pref_tl_interval", Integer.toString(ListAdapter.default_pref_tl_interval));
 
 		final boolean pref_enable_tl_interval = pref_app.getBoolean("pref_enable_tl_interval", true);
 		if (pref_enable_tl_interval) {
@@ -795,7 +778,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 	}
 
 	private final void setRequestedOrientation() {
-		final int pref_screen_orientation_timeline = Integer.parseInt(pref_app.getString("pref_screen_orientation_timeline", "0"));
+		final int pref_screen_orientation_timeline = ListAdapter.getPrefInt(this, "pref_screen_orientation_timeline", "0");
 		switch (pref_screen_orientation_timeline) {
 		default:
 			break;

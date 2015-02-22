@@ -163,16 +163,8 @@ public class ShiobeForAndroidActivity extends Activity {
 			}).create().show();
 			return;
 		}
-		try {
-			pref_timeout_t4j_connection = Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_connection = 20000;
-		}
-		try {
-			pref_timeout_t4j_read = Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_read = 120000;
-		}
+		pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
+		pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 
 		final String pref_twitterlogin_mode = pref_app.getString("pref_twitterlogin_mode", "0");
 		WriteLog.write(this, "pref_twitterlogin_mode: " + pref_twitterlogin_mode);
@@ -458,26 +450,10 @@ public class ShiobeForAndroidActivity extends Activity {
 			mediaPlayer.start();
 		}
 
-		try {
-			pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", Integer.toString(ListAdapter.default_timeout_connection)));
-		} catch (final Exception e) {
-			pref_timeout_connection = ListAdapter.default_timeout_connection;
-		}
-		try {
-			pref_timeout_so = Integer.parseInt(pref_app.getString("pref_timeout_so", Integer.toString(ListAdapter.default_timeout_so)));
-		} catch (final Exception e) {
-			pref_timeout_so = ListAdapter.default_timeout_connection;
-		}
-		try {
-			pref_timeout_t4j_connection = Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_connection = 20000;
-		}
-		try {
-			pref_timeout_t4j_read = Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_read = 120000;
-		}
+		pref_timeout_connection = ListAdapter.getPrefInt(this, "pref_timeout_connection", Integer.toString(ListAdapter.default_timeout_connection));
+		pref_timeout_so = ListAdapter.getPrefInt(this, "pref_timeout_so", Integer.toString(ListAdapter.default_timeout_so));
+		pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
+		pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 
 		if (checkNetworkUtil.isConnected() == false) {
 			adapter.toast(getString(R.string.cannot_access_internet));
@@ -727,16 +703,8 @@ public class ShiobeForAndroidActivity extends Activity {
 					consumerKey = getString(R.string.default_consumerKey);
 					consumerSecret = getString(R.string.default_consumerSecret);
 				}
-				try {
-					pref_timeout_t4j_connection = Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-				} catch (final Exception e) {
-					pref_timeout_t4j_connection = 20000;
-				}
-				try {
-					pref_timeout_t4j_read = Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-				} catch (final Exception e) {
-					pref_timeout_t4j_read = 120000;
-				}
+				pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
+				pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 
 				AccessToken accessToken = null;
 				try {
@@ -789,7 +757,7 @@ public class ShiobeForAndroidActivity extends Activity {
 		boolean ret = true;
 
 		pref_twtr = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
-		final int user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
+		final int user_index_size = ListAdapter.getPrefInt(this, "pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size));
 		final String[] ITEM1 = new String[user_index_size + 1];
 		final String[] ITEM2 = new String[user_index_size];
 		int account_num = 0;

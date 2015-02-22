@@ -16,7 +16,6 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -98,38 +97,38 @@ public final class WearTweet extends Activity {
 		}
 	}
 
-	private final Configuration getConf(final Context context, int index) {
-		final SharedPreferences pref_twtr = context.getSharedPreferences("Twitter_setting", 0); // MODE_PRIVATE == 0
-		final int pref_timeout_t4j_connection = setTimeout(context, true);
-		final int pref_timeout_t4j_read = setTimeout(context, false);
+	private final Configuration getConf(int index) {
+		final SharedPreferences pref_twtr = getSharedPreferences("Twitter_setting", 0); // MODE_PRIVATE == 0
+		final int pref_timeout_t4j_connection = setTimeout(true);
+		final int pref_timeout_t4j_read = setTimeout(false);
 
-		String crpKey = context.getString(R.string.app_name);
-		final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService("phone");
+		String crpKey = getString(R.string.app_name);
+		final TelephonyManager telephonyManager = (TelephonyManager) getSystemService("phone");
 		crpKey += telephonyManager.getDeviceId();
 		crpKey += telephonyManager.getSimSerialNumber();
 		try {
-			final PackageInfo packageInfo = context.getPackageManager().getPackageInfo("jp.gr.java_conf.ya.shiobeforandroid2", PackageManager.GET_META_DATA);
+			final PackageInfo packageInfo = getPackageManager().getPackageInfo("jp.gr.java_conf.ya.shiobeforandroid2", PackageManager.GET_META_DATA);
 			crpKey += Long.toString(packageInfo.firstInstallTime);
 		} catch (final NameNotFoundException e) {
 		}
 
-		String consumerKey = MyCrypt.decrypt(context, crpKey, pref_twtr.getString("consumer_key_" + index, ""));
-		String consumerSecret = MyCrypt.decrypt(context, crpKey, pref_twtr.getString("consumer_secret_" + index, ""));
+		String consumerKey = MyCrypt.decrypt(this, crpKey, pref_twtr.getString("consumer_key_" + index, ""));
+		String consumerSecret = MyCrypt.decrypt(this, crpKey, pref_twtr.getString("consumer_secret_" + index, ""));
 		if (consumerKey.equals("") || consumerSecret.equals("")) {
-			consumerKey = context.getString(R.string.default_consumerKey);
-			consumerSecret = context.getString(R.string.default_consumerSecret);
+			consumerKey = getString(R.string.default_consumerKey);
+			consumerSecret = getString(R.string.default_consumerSecret);
 		}
-		final String oauthToken = MyCrypt.decrypt(context, crpKey, pref_twtr.getString("oauth_token_" + index, ""));
-		WriteLog.write(context, "oauthToken: " + oauthToken);
-		final String oauthTokenSecret = MyCrypt.decrypt(context, crpKey, pref_twtr.getString("oauth_token_secret_" + index, ""));
-		WriteLog.write(context, "oauthTokenSecret: " + oauthTokenSecret);
+		final String oauthToken = MyCrypt.decrypt(this, crpKey, pref_twtr.getString("oauth_token_" + index, ""));
+		WriteLog.write(this, "oauthToken: " + oauthToken);
+		final String oauthTokenSecret = MyCrypt.decrypt(this, crpKey, pref_twtr.getString("oauth_token_secret_" + index, ""));
+		WriteLog.write(this, "oauthTokenSecret: " + oauthTokenSecret);
 		final ConfigurationBuilder confbuilder = new ConfigurationBuilder();
 		confbuilder.setOAuthAccessToken(oauthToken).setOAuthAccessTokenSecret(oauthTokenSecret).setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret).setHttpConnectionTimeout(pref_timeout_t4j_connection).setHttpReadTimeout(pref_timeout_t4j_read).setHttpRetryCount(3).setHttpRetryIntervalSeconds(10);// .setUseSSL(true);
 		return confbuilder.build();
 	}
 
-	private final Twitter getTwitter(final Context context, final int index, final boolean saveIndex) {
-		final SharedPreferences pref_twtr = context.getSharedPreferences("Twitter_setting", MODE_PRIVATE);
+	private final Twitter getTwitter(final int index, final boolean saveIndex) {
+		final SharedPreferences pref_twtr = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
 		if (isConnected(pref_twtr.getString("status_" + index, ""))) {
 			if (( twitter == null ) || ( index != index_pre )) {
 				if (saveIndex) {
@@ -137,13 +136,13 @@ public final class WearTweet extends Activity {
 					editor.putString("index", Integer.toString(index));
 					editor.commit();
 				}
-				final Configuration conf = getConf(context, index);
+				final Configuration conf = getConf(index);
 				twitter = new TwitterFactory(conf).getInstance();
 				index_pre = index;
 			}
 			return twitter;
 		}
-		//		toast(context.getString(R.string.exception));
+		//		toast(getString(R.string.exception));
 		return null;
 	}
 
@@ -198,7 +197,7 @@ public final class WearTweet extends Activity {
 			@Override
 			public final void run() {
 				try {
-					final long pref_autotweet_wait = Integer.parseInt(pref_app.getString("pref_autotweet_wait", "0"));
+					final long pref_autotweet_wait = ListAdapter.getPrefInt(WearTweet.this, "pref_autotweet_wait", "0");
 					WriteLog.write(WearTweet.this, "pref_autotweet_wait: " + Long.toString(pref_autotweet_wait));
 					if (pref_autotweet_wait > 0) {
 						try {
@@ -280,7 +279,7 @@ public final class WearTweet extends Activity {
 				WriteLog.write(WearTweet.this, "inReplyToStatusId: " + inReplyToStatusId);
 
 				try {
-					final Twitter twitter = getTwitter(WearTweet.this, Integer.parseInt(index), false);
+					final Twitter twitter = getTwitter(Integer.parseInt(index), false);
 
 					if (str2.equals(getString(R.string.del))) {
 						d(twitter, screenName);
@@ -364,20 +363,11 @@ public final class WearTweet extends Activity {
 		}
 	}
 
-	private final int setTimeout(final Context context, final boolean mode) {
-		final SharedPreferences pref_app = PreferenceManager.getDefaultSharedPreferences(context);
+	private final int setTimeout(final boolean mode) {
 		if (mode) {
-			try {
-				return Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-			} catch (final Exception e) {
-				return 20000;
-			}
+			return ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
 		} else {
-			try {
-				return Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-			} catch (final Exception e) {
-				return 120000;
-			}
+			return ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 		}
 	}
 

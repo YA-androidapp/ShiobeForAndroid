@@ -78,9 +78,9 @@ public final class BatteryWidget extends AppWidgetProvider {
 				if (pref_enable_batterywidget_tweet) {
 					WriteLog.write(context, "pref_enable_batterywidget_tweet: " + Boolean.toString(pref_enable_batterywidget_tweet));
 
-					int pref_batterywidget_tweet_interval = Integer.parseInt(pref_app.getString("pref_batterywidget_tweet_interval", "10"));
-					final int pref_batterywidget_tweet_upper = Integer.parseInt(pref_app.getString("pref_batterywidget_tweet_upper", "100"));
-					final int pref_batterywidget_tweet_lower = Integer.parseInt(pref_app.getString("pref_batterywidget_tweet_lower", "0"));
+					int pref_batterywidget_tweet_interval = ListAdapter.getPrefInt(context, "pref_batterywidget_tweet_interval", "10");
+					final int pref_batterywidget_tweet_upper = ListAdapter.getPrefInt(context, "pref_batterywidget_tweet_upper", "100");
+					final int pref_batterywidget_tweet_lower = ListAdapter.getPrefInt(context, "pref_batterywidget_tweet_lower", "0");
 					final String batterywidget_tweet_prefix = pref_app.getString("batterywidget_tweet_prefix", "");
 
 					if (pref_batterywidget_tweet_interval == 0) {

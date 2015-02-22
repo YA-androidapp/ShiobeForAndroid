@@ -286,18 +286,8 @@ public final class UpdateTweetMultiple extends Activity {
 		final boolean pref_enable_cooperation_url = pref_app.getBoolean("pref_enable_cooperation_url", false);
 		if (pref_enable_cooperation_url) {
 			final String pref_cooperation_url = pref_app.getString("pref_cooperation_url", ListAdapter.default_cooperation_url);
-			int pref_timeout_connection;
-			try {
-				pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-			} catch (final Exception e) {
-				pref_timeout_connection = ListAdapter.default_timeout_connection;
-			}
-			int pref_timeout_so;
-			try {
-				pref_timeout_so = Integer.parseInt(pref_app.getString("pref_timeout_so", ListAdapter.default_timeout_so_string));
-			} catch (final Exception e) {
-				pref_timeout_so = ListAdapter.default_timeout_connection;
-			}
+			int pref_timeout_connection = ListAdapter.getPrefInt(this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
+			int pref_timeout_so = ListAdapter.getPrefInt(this, "pref_timeout_so", ListAdapter.default_timeout_so_string);
 
 			final String app_uri_setting = pref_cooperation_url + "autocomplete_shiobe.php?id=";
 			final String url1 = app_uri_setting + screenName + "&mode=pre";
@@ -353,16 +343,8 @@ public final class UpdateTweetMultiple extends Activity {
 		}
 
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
-		try {
-			pref_timeout_t4j_connection = Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_connection = 20000;
-		}
-		try {
-			pref_timeout_t4j_read = Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_read = 120000;
-		}
+		pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
+		pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 
 		oauthTokenSecret = MyCrypt.decrypt(this, crpKey, pref_twtr.getString("oauth_token_secret_" + index, ""));
 		try {
@@ -491,7 +473,7 @@ public final class UpdateTweetMultiple extends Activity {
 			mediaPlayer.start();
 		}
 
-		final int pref_screen_orientation_tweet = Integer.parseInt(pref_app.getString("pref_screen_orientation_tweet", "0"));
+		final int pref_screen_orientation_tweet = ListAdapter.getPrefInt(this, "pref_screen_orientation_tweet", "0");
 		switch (pref_screen_orientation_tweet) {
 		default:
 			break;
@@ -631,18 +613,8 @@ public final class UpdateTweetMultiple extends Activity {
 			@Override
 			public final boolean onLongClick(final View v) {
 				pref_app = PreferenceManager.getDefaultSharedPreferences(UpdateTweetMultiple.this);
-				int pref_timeout_connection;
-				try {
-					pref_timeout_connection = Integer.parseInt(pref_app.getString("pref_timeout_connection", ListAdapter.default_timeout_connection_string));
-				} catch (final Exception e) {
-					pref_timeout_connection = ListAdapter.default_timeout_connection;
-				}
-				int pref_timeout_so;
-				try {
-					pref_timeout_so = Integer.parseInt(pref_app.getString("pref_timeout_so", ListAdapter.default_timeout_so_string));
-				} catch (final Exception e) {
-					pref_timeout_so = ListAdapter.default_timeout_connection;
-				}
+				int pref_timeout_connection = ListAdapter.getPrefInt(UpdateTweetMultiple.this, "pref_timeout_connection", ListAdapter.default_timeout_connection_string);
+				int pref_timeout_so = ListAdapter.getPrefInt(UpdateTweetMultiple.this, "pref_timeout_so", ListAdapter.default_timeout_so_string);
 				if (oauthToken.equals("")) {
 					pref_twtr = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
 					init_user(adapter.checkIndexFromPrefTwtr());
@@ -764,7 +736,7 @@ public final class UpdateTweetMultiple extends Activity {
 	public final boolean onOptionsItemSelected(final MenuItem item) {
 		boolean ret = true;
 		if (item.getItemId() == R.string.changeaccount) {
-			int pref_user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
+			int pref_user_index_size = ListAdapter.getPrefInt(this, "pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size));
 			if (pref_user_index_size < ListAdapter.default_user_index_size) {
 				pref_user_index_size = ListAdapter.default_user_index_size;
 			}

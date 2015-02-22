@@ -29,7 +29,7 @@ public final class TwinActivity extends ActivityGroup {
 
 	protected final void initGroups() {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(this);
-		final int pref_twin_width = Integer.parseInt(pref_app.getString("pref_twin_width", "100"));
+		final int pref_twin_width = ListAdapter.getPrefInt(this, "pref_twin_width", "100");
 
 		final LinearLayout layout = (LinearLayout) findViewById(R.id.activity_layout);
 		final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(pref_twin_width, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -83,8 +83,8 @@ public final class TwinActivity extends ActivityGroup {
 			mediaPlayer.start();
 		}
 
-		final int pre_pref_screen_orientation_timeline = Integer.parseInt(pref_app.getString("pref_screen_orientation_timeline", "0")); // 避難
-		final int pref_screen_orientation_twinactivity = Integer.parseInt(pref_app.getString("pref_screen_orientation_twinactivity", "0"));
+		final int pre_pref_screen_orientation_timeline = ListAdapter.getPrefInt(this, "pref_screen_orientation_timeline", "0"); // 避難
+		final int pref_screen_orientation_twinactivity = ListAdapter.getPrefInt(this, "pref_screen_orientation_twinactivity", "0");
 		SharedPreferences.Editor editor = pref_app.edit();
 		editor.putString("pref_screen_orientation_timeline", Integer.toString(pref_screen_orientation_twinactivity));
 		editor.commit();

@@ -45,7 +45,7 @@ public final class TabsActivity extends TabActivity {
 		TabHost.TabSpec spec;
 		Intent intent;
 
-		final int user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
+		final int user_index_size = ListAdapter.getPrefInt(this, "pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size));
 
 		intent = new Intent().setClass(this, ShiobeForAndroidActivity.class);
 		spec = tabHost.newTabSpec("Start").setIndicator("Start", res.getDrawable(R.drawable.ic_launcher)).setContent(intent);
@@ -83,7 +83,7 @@ public final class TabsActivity extends TabActivity {
 			mediaPlayer.start();
 		}
 
-		final int pref_screen_orientation_timeline = Integer.parseInt(pref_app.getString("pref_screen_orientation_timeline", "0"));
+		final int pref_screen_orientation_timeline = ListAdapter.getPrefInt(this, "pref_screen_orientation_timeline", "0");
 		switch (pref_screen_orientation_timeline) {
 		default:
 			break;

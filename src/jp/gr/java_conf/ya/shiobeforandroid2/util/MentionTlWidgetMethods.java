@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jp.gr.java_conf.ya.shiobeforandroid2.R;
 import jp.gr.java_conf.ya.shiobeforandroid2.ListAdapter;
+import jp.gr.java_conf.ya.shiobeforandroid2.R;
 import jp.gr.java_conf.ya.shiobeforandroid2.StatusTl;
 import jp.gr.java_conf.ya.shiobeforandroid2.WearTweet;
 import twitter4j.Paging;
@@ -59,8 +59,8 @@ public final class MentionTlWidgetMethods {
 	private static final int checkIndexFromPrefTwtr(final Context context) {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(context);
 		pref_twtr = context.getSharedPreferences("Twitter_setting", 0); // MODE_PRIVATE == 0
-		final int pref_user_index_offset = Integer.parseInt(pref_app.getString("pref_user_index_offset", "0"));
-		final int user_index_size = Integer.parseInt(pref_app.getString("pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size)));
+		final int pref_user_index_offset = ListAdapter.getPrefInt(context, "pref_user_index_offset", "0");
+		final int user_index_size = ListAdapter.getPrefInt(context, "pref_user_index_size", Integer.toString(ListAdapter.default_user_index_size));
 
 		try {
 			return Integer.parseInt(pref_twtr.getString("index", "0"));
@@ -336,17 +336,9 @@ public final class MentionTlWidgetMethods {
 
 	private static final int setTimeout(final Context context, final boolean mode) {
 		if (mode) {
-			try {
-				return Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-			} catch (final Exception e) {
-				return 20000;
-			}
+			return ListAdapter.getPrefInt(context, "pref_timeout_t4j_connection", "20000");
 		} else {
-			try {
-				return Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-			} catch (final Exception e) {
-				return 120000;
-			}
+			return ListAdapter.getPrefInt(context, "pref_timeout_t4j_read", "120000");
 		}
 	}
 
@@ -375,7 +367,7 @@ public final class MentionTlWidgetMethods {
 		//		WriteLog.write(context, "pref_mute_source: " + pref_mute_source);
 		//		WriteLog.write(context, "pref_mute_text: " + pref_mute_text);
 
-		final int pref_mentiontlwidget_interval = Integer.parseInt(pref_app.getString("pref_mentiontlwidget_interval", "60"));
+		final int pref_mentiontlwidget_interval = ListAdapter.getPrefInt(context, "pref_mentiontlwidget_interval", "60");
 
 		final String lastTweetIdString = pref_twtr.getString("lastTweetIdString_" + Integer.toString(checkIndexFromPrefTwtr(context)), "0");
 
@@ -408,9 +400,8 @@ public final class MentionTlWidgetMethods {
 			//			WriteLog.write(context, "(currentTime - lastUpdateTime > 1000 * pref_mentiontlwidget_interval)");
 
 			final int pref_mention_count_mentiontlwidget =
-					isMobile ? Integer.parseInt(pref_app.getString("pref_mention_count_mentiontlwidget_mobile", "20"))
-							: Integer.parseInt(pref_app.getString("pref_mention_count_mentiontlwidget", "20"));
-			final int pref_mentiontlwidget_new = Integer.parseInt(pref_app.getString("pref_mentiontlwidget_new", "3600"));
+					isMobile ? ListAdapter.getPrefInt(context, "pref_mention_count_mentiontlwidget_mobile", "20") : ListAdapter.getPrefInt(context, "pref_mention_count_mentiontlwidget", "20");
+			final int pref_mentiontlwidget_new = ListAdapter.getPrefInt(context, "pref_mentiontlwidget_new", "3600");
 
 			final String pref_tl_fontcolor_screenname_mentiontlwidget = pref_app.getString("pref_tl_fontcolor_screenname_mentiontlwidget", "#000000");
 			final String pref_tl_fontcolor_screenname_mentiontlwidget_ff = pref_app.getString("pref_tl_fontcolor_screenname_mentiontlwidget_ff", "#00CCFF");
@@ -502,7 +493,7 @@ public final class MentionTlWidgetMethods {
 							final boolean pref_enable_ringtone_onmention = pref_app.getBoolean("pref_enable_ringtone_onmention", true);
 							if (pref_enable_ringtone_onmention) {
 								final String pref_ringtone_onmention_mentiontlwidget = pref_app.getString("pref_ringtone_onmention_mentiontlwidget", "");
-								final int pref_ringtone_onmention_mentiontlwidget_length = Integer.parseInt(pref_app.getString("pref_ringtone_onmention_mentiontlwidget_length", "10000"));
+								final int pref_ringtone_onmention_mentiontlwidget_length = ListAdapter.getPrefInt(context, "pref_ringtone_onmention_mentiontlwidget_length", "10000");
 								playSound(context, pref_ringtone_onmention_mentiontlwidget, pref_ringtone_onmention_mentiontlwidget_length);
 							}
 						}
@@ -641,8 +632,7 @@ public final class MentionTlWidgetMethods {
 	}
 
 	public static final void updateTextview(final Context context, final ComponentName componentName, final CharSequence string) {
-		final SharedPreferences pref_app = PreferenceManager.getDefaultSharedPreferences(context);
-		final int pref_tl_fontsize_mentiontlwidget = Integer.parseInt(pref_app.getString("pref_tl_fontsize_mentiontlwidget", "12"));
+		final int pref_tl_fontsize_mentiontlwidget = ListAdapter.getPrefInt(context, "pref_tl_fontsize_mentiontlwidget", "12");
 		final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.mentiontlwidget);
 		final Intent newintent = new Intent();
 		newintent.setAction(ACTION_BTNCLICK);

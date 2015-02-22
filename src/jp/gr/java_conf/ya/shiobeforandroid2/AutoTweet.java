@@ -86,7 +86,7 @@ public final class AutoTweet extends BroadcastReceiver {
 		final SharedPreferences pref_app = PreferenceManager.getDefaultSharedPreferences(context);
 
 		try {
-			final long pref_autotweet_wait = Integer.parseInt(pref_app.getString("pref_autotweet_wait", "0"));
+			final long pref_autotweet_wait = ListAdapter.getPrefInt(context, "pref_autotweet_wait", "0");
 			WriteLog.write(context, "pref_autotweet_wait: " + Long.toString(pref_autotweet_wait));
 			if (pref_autotweet_wait > 0) {
 				try {
@@ -138,18 +138,8 @@ public final class AutoTweet extends BroadcastReceiver {
 		final String oauthTokenSecret = MyCrypt.decrypt(context, crpKey, pref_twtr.getString("oauth_token_secret_" + index, ""));
 		WriteLog.write(context, "oauthToken: " + oauthToken);
 
-		int pref_timeout_t4j_connection;
-		int pref_timeout_t4j_read;
-		try {
-			pref_timeout_t4j_connection = Integer.parseInt(pref_app.getString("pref_timeout_t4j_connection", "20000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_connection = 20000;
-		}
-		try {
-			pref_timeout_t4j_read = Integer.parseInt(pref_app.getString("pref_timeout_t4j_read", "120000"));
-		} catch (final Exception e) {
-			pref_timeout_t4j_read = 120000;
-		}
+		final int pref_timeout_t4j_connection = ListAdapter.getPrefInt(context, "pref_timeout_t4j_connection", "20000");
+		final int pref_timeout_t4j_read = ListAdapter.getPrefInt(context, "pref_timeout_t4j_read", "120000");
 
 		String mode = "";
 		String str1 = "";

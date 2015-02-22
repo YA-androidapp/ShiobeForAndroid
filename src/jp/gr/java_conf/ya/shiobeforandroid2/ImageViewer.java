@@ -283,14 +283,6 @@ public final class ImageViewer extends Activity implements OnTouchListener {
 		}
 	}
 
-	final int getPrefInt(String key, String defaultValueString) {
-		try {
-			return Integer.parseInt(pref_app.getString(key, defaultValueString));
-		} catch (final Exception e) {
-			return Integer.parseInt(defaultValueString);
-		}
-	}
-
 	private final void image_set(final String path) {
 		if (path.equals("")) {
 			WriteLog.write(this, "image_set(final String imagePathString) (imagePathString.equals(\"\"))");
@@ -368,7 +360,7 @@ public final class ImageViewer extends Activity implements OnTouchListener {
 			} catch (final OutOfMemoryError e2) {
 				try {
 					final Boolean pref_pictureappended_oome_argb4444 = pref_app.getBoolean("pref_pictureappended_oome_argb4444", false);
-					int pref_pictureappended_oome_insamplesize = getPrefInt("pref_pictureappended_oome_insamplesize", "2");
+					int pref_pictureappended_oome_insamplesize = ListAdapter.getPrefInt(this, "pref_pictureappended_oome_insamplesize", "2");
 
 					final BitmapFactory.Options bmfOptions = new BitmapFactory.Options();
 					if (pref_pictureappended_oome_argb4444) {
@@ -488,7 +480,7 @@ public final class ImageViewer extends Activity implements OnTouchListener {
 					} else {
 						WriteLog.write(ImageViewer.this, "(!url.startsWith(\"file://\"))");
 
-						final int pref_enable_expand_uri_string_length = getPrefInt("pref_enable_expand_uri_string_length", "30");
+						final int pref_enable_expand_uri_string_length = ListAdapter.getPrefInt(ImageViewer.this, "pref_enable_expand_uri_string_length", "30");
 						url = ( url.length() > pref_enable_expand_uri_string_length ) ? url : ( new UrlUtil(ImageViewer.this) ).expand_uri(url);
 
 						urls[1] = url;

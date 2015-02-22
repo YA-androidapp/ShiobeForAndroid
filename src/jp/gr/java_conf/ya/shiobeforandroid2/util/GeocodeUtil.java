@@ -3,8 +3,8 @@ package jp.gr.java_conf.ya.shiobeforandroid2.util; // Copyright (c) 2013-2015 YA
 import java.util.ArrayList;
 import java.util.Collections;
 
-import jp.gr.java_conf.ya.shiobeforandroid2.R;
 import jp.gr.java_conf.ya.shiobeforandroid2.ListAdapter;
+import jp.gr.java_conf.ya.shiobeforandroid2.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +20,7 @@ public final class GeocodeUtil {
 		if (( Math.abs(latitude) >= 0 ) && ( Math.abs(longitude) >= 0 ) && ( Math.abs(latitude) <= 90 ) && ( Math.abs(longitude) <= 180 )) {
 
 			final SharedPreferences pref_app = PreferenceManager.getDefaultSharedPreferences(context);
-			final int pref_reversegeocoding_site = Integer.parseInt(pref_app.getString("pref_reversegeocoding_site", "0"));
+			final int pref_reversegeocoding_site = ListAdapter.getPrefInt(context, "pref_reversegeocoding_site", "0");
 			final String pref_reversegeocoding_yahoo_apikey = pref_app.getString("pref_reversegeocoding_yahoo_apikey", context.getString(R.string.default_yahooKey));
 
 			final ArrayList<String> result = new ArrayList<String>(18);
