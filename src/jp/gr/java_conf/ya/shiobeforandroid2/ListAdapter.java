@@ -2889,22 +2889,44 @@ public class ListAdapter extends BaseAdapter {
 							@Override
 							public final void onClick(final DialogInterface dialog, final int which) {
 								if (which == 0) {
-									new AlertDialog.Builder(context).setTitle(context.getString(R.string.add_mute_screenname) + " " + Long.toString(finalTweet_menu_RetweetedStatus.getId())).setMessage(context.getString(R.string.confirm_add_mute_screenname)
-											+ ":" + NL + " @" + finalTweet_menu_RetweetedStatus_screenName).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-										@Override
-										public final void onClick(final DialogInterface dialog, final int which) {
-
-											pref_app = PreferenceManager.getDefaultSharedPreferences(context);
-											final String pref_mute_screenname = pref_app.getString("pref_mute_screenname", "");
-											final SharedPreferences.Editor editor = pref_app.edit();
-											editor.putString("pref_mute_screenname", pref_mute_screenname + ( ( pref_mute_screenname.endsWith(",") ) ? "" : "," )
-													+ finalTweet_menu_RetweetedStatus_screenName + ",");
-											editor.commit();
-										}
-									}).create().show();
+									if (finalTweet_menu.isRetweet()) {
+										final String[] str_items = { finalTweet_menu_RetweetedStatus_screenName, finalTweet_menu_screenName };
+										final boolean[] flags = new boolean[2];
+										new AlertDialog.Builder(context).setTitle(R.string.confirm_add_mute_screenname).setMultiChoiceItems(str_items, flags, new DialogInterface.OnMultiChoiceClickListener() {
+											@Override
+											public final void onClick(final DialogInterface dialog, final int which, final boolean isChecked) {
+												flags[which] = isChecked;
+											}
+										}).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int whichButton) {
+												if (flags[0] || flags[1]) {
+													pref_app = PreferenceManager.getDefaultSharedPreferences(context);
+													final String pref_mute_screenname = pref_app.getString("pref_mute_screenname", "");
+													final SharedPreferences.Editor editor = pref_app.edit();
+													editor.putString("pref_mute_screenname", pref_mute_screenname + ( ( pref_mute_screenname.endsWith(",") ) ? "" : "," )
+															+ ( flags[0] ? str_items[0] + "," : "" ) + ( flags[1] ? str_items[1] + "," : "" ));
+													editor.commit();
+												}
+											}
+										}).show();
+									} else {
+										new AlertDialog.Builder(context).setTitle(R.string.add_mute_screenname).setMessage(context.getString(R.string.confirm_add_mute_screenname) + ":" + NL + " @"
+												+ finalTweet_menu_RetweetedStatus_screenName).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+											@Override
+											public final void onClick(final DialogInterface dialog, final int which) {
+												pref_app = PreferenceManager.getDefaultSharedPreferences(context);
+												final String pref_mute_screenname = pref_app.getString("pref_mute_screenname", "");
+												final SharedPreferences.Editor editor = pref_app.edit();
+												editor.putString("pref_mute_screenname", pref_mute_screenname + ( ( pref_mute_screenname.endsWith(",") ) ? "" : "," )
+														+ finalTweet_menu_RetweetedStatus_screenName + ",");
+												editor.commit();
+											}
+										}).create().show();
+									}
 								} else if (which == 1) {
-									new AlertDialog.Builder(context).setTitle(context.getString(R.string.add_mute_source) + " " + Long.toString(finalTweet_menu_RetweetedStatus.getId())).setMessage(context.getString(R.string.confirm_add_mute_source)
-											+ ":" + NL + " " + finalTweet_menu_RetweetedStatus.getSource()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+									new AlertDialog.Builder(context).setTitle(R.string.add_mute_source).setMessage(context.getString(R.string.confirm_add_mute_source) + ":" + NL + " "
+											+ finalTweet_menu_RetweetedStatus.getSource()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 										@Override
 										public final void onClick(final DialogInterface dialog, final int which) {
 											pref_app = PreferenceManager.getDefaultSharedPreferences(context);
@@ -2918,7 +2940,6 @@ public class ListAdapter extends BaseAdapter {
 								}
 							}
 						}).create().show();
-
 					} else if (finalITEM[which].startsWith(context.getString(R.string.develop_bookmark))) {
 						final String[] ITEM3 = { context.getString(R.string.save), context.getString(R.string.load) };
 
