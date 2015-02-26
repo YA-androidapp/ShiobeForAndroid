@@ -16,6 +16,10 @@
                     android:key="pref_userrt_format"
                     android:summary="%USER%: ScreenName, %TEXT%: Text"
                     android:title="@string/userrt_format" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="pref_enable_userrt_format_via"
+                    android:title="@string/enable_userrt_format_via" />
 
                 <PreferenceScreen android:title="@string/notification" >
                     <PreferenceCategory

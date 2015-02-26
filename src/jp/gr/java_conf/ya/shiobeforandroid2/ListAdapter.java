@@ -1904,9 +1904,11 @@ public class ListAdapter extends BaseAdapter {
 
 		ITEM.add(context.getString(R.string.fav_who_add));
 
-		ITEM.add(context.getString(R.string.add_favrt));
+		if (!finalTweet_menu_user.isProtected()) {
+			ITEM.add(context.getString(R.string.add_favrt));
 
-		ITEM.add(context.getString(R.string.add_favuserrt));
+			ITEM.add(context.getString(R.string.add_favuserrt));
+		}
 
 		ITEM.add(context.getString(R.string.show_mention));
 
@@ -5680,7 +5682,7 @@ public class ListAdapter extends BaseAdapter {
 				final boolean pref_enable_notification_done_tweet = pref_app.getBoolean("pref_enable_notification_done_tweet", true);
 				final boolean pref_enable_notification_twitterexception = pref_app.getBoolean("pref_enable_notification_twitterexception", true);
 
-				final StatusUpdate statusUpdate = new StatusUpdate(tweetstr);
+				final StatusUpdate statusUpdate = new StatusUpdate(( tweetstr.length() > 140 ) ? tweetstr.substring(0, 140) : tweetstr);
 				final String finalTweetstr = tweetstr;
 				Status updatedstatus;
 				try {
@@ -5853,28 +5855,53 @@ public class ListAdapter extends BaseAdapter {
 
 	private final String userrt(final int index, final Status tweet) {
 		try {
-			String statusUserScreenName = "";
-			String statusText = "";
-			long statusId = 0;
-			if (tweet.isRetweet()) {
-				statusText = tweet.getRetweetedStatus().getText();
-				statusUserScreenName = tweet.getRetweetedStatus().getUser().getScreenName();
-			} else {
-				statusText = tweet.getText();
-				statusUserScreenName = tweet.getUser().getScreenName();
-			}
-
 			pref_app = PreferenceManager.getDefaultSharedPreferences(context);
 			final String pref_userrt_format = pref_app.getString("pref_userrt_format", "RT @%USER%: %TEXT%");
-			final String newStatusText = pref_userrt_format.replace("%USER%", statusUserScreenName).replace("%TEXT%", statusText);
+			final boolean pref_enable_userrt_format_via = pref_app.getBoolean("pref_enable_userrt_format_via", false);
 
-			final StatusUpdate statusUpdate = new StatusUpdate(newStatusText);
-			statusUpdate.setInReplyToStatusId(statusId);
-			getTwitter(index, false).updateStatus(statusUpdate);
+			if (tweet.isRetweet()) {
+				if (tweet.getRetweetedStatus() != null) {
+					if (pref_enable_userrt_format_via) {
+						// RT @%USER2%: RT @%USER1%: %TEXT%
+						final String newStatusText =
+								pref_userrt_format.replace("%USER%", tweet.getUser().getScreenName()).replace("%TEXT%", pref_userrt_format.replace("%USER%", tweet.getRetweetedStatus().getUser().getScreenName()).replace("%TEXT%", tweet.getRetweetedStatus().getText()));
+						final StatusUpdate statusUpdate = new StatusUpdate(( newStatusText.length() > 140 ) ? newStatusText.substring(0, 140) : newStatusText);
+						WriteLog.write(context, "newStatusText: " + newStatusText);
+						statusUpdate.setInReplyToStatusId(tweet.getRetweetedStatus().getId());
+						getTwitter(index, false).updateStatus(statusUpdate);
+						return ( context.getString(R.string.done_userrt) + ": " + newStatusText + " [@" + checkScreennameFromIndex(index) + "]" );
+					} else {
+						// RT @%USER1%: %TEXT%
+						final String newStatusText = pref_userrt_format.replace("%USER%", tweet.getRetweetedStatus().getUser().getScreenName()).replace("%TEXT%", tweet.getRetweetedStatus().getText());
+						final StatusUpdate statusUpdate = new StatusUpdate(( newStatusText.length() > 140 ) ? newStatusText.substring(0, 140) : newStatusText);
+						WriteLog.write(context, "newStatusText: " + newStatusText);
+						statusUpdate.setInReplyToStatusId(tweet.getRetweetedStatus().getId());
+						getTwitter(index, false).updateStatus(statusUpdate);
+						return ( context.getString(R.string.done_userrt) + ": " + newStatusText + " [@" + checkScreennameFromIndex(index) + "]" );
+					}
+				}
+			}
 
-			return ( context.getString(R.string.done_userrt) + ": @" + statusUserScreenName + ": " + statusText + " " + " [@" + checkScreennameFromIndex(index) + "]" );
+			if (pref_enable_userrt_format_via) {
+				// RT @%USER2% RT @%USER1% %TEXT%
+				final String newStatusText = pref_userrt_format.replace("%USER%", tweet.getUser().getScreenName()).replace("%TEXT%", tweet.getText());
+				final StatusUpdate statusUpdate = new StatusUpdate(( newStatusText.length() > 140 ) ? newStatusText.substring(0, 140) : newStatusText);
+				WriteLog.write(context, "newStatusText: " + newStatusText);
+				statusUpdate.setInReplyToStatusId(tweet.getId());
+				getTwitter(index, false).updateStatus(statusUpdate);
+				return ( context.getString(R.string.done_userrt) + ": " + newStatusText + " [@" + checkScreennameFromIndex(index) + "]" );
+			} else {
+				// RT @%USER1% %TEXT%
+				final int lastIndexOf = tweet.getText().lastIndexOf("RT");
+				final String newStatusText = ( lastIndexOf > -1 ) ? tweet.getText().substring(lastIndexOf) : tweet.getText();
+				final StatusUpdate statusUpdate = new StatusUpdate(( newStatusText.length() > 140 ) ? newStatusText.substring(0, 140) : newStatusText);
+				WriteLog.write(context, "newStatusText: " + newStatusText);
+				statusUpdate.setInReplyToStatusId(tweet.getId());
+				getTwitter(index, false).updateStatus(statusUpdate);
+				return ( context.getString(R.string.done_userrt) + ": " + newStatusText + " [@" + checkScreennameFromIndex(index) + "]" );
+			}
 		} catch (final TwitterException e) {
-			WriteLog.write(context, e);
+			twitterException(e);
 		}
 		return "";
 	}

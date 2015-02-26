@@ -319,6 +319,7 @@
     <string name="enable_update_check">更新を自動でチェックする</string>
     <string name="enable_update_locationinfo">位置情報の更新を有効にする</string>
     <string name="enable_updatetweet_auto_inituser">投稿画面でWi-Fi状況変化時に再認証する</string>
+    <string name="enable_userrt_format_via">経由ユーザを含める</string>
     <string name="enable_wear_replace_dictionary">Android Wearから入力した時にユーザー辞書を利用して置換する</string>
     <string name="enable_wear_rome2kana">Android Wearから入力した時にローマ字をかなに変換する</string>
     <string name="enter_consumerkey_and_secret_ssv">""Consumer Key+半角スペース+Consumer Secret"を入力して下さい</string>
