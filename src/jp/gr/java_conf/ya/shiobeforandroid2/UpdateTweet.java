@@ -260,7 +260,6 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 	private String oauthToken = "";
 	private String preCapturedUri = "";
 	private static String pref_pictureUploadSite = ListAdapter.default_pictureUploadSite;
-	private String pref_tl_bgcolor_updatetweet = "";
 	private String pref_tl_fontcolor_text_updatetweet = "";
 	private String pref_tl_fontcolor_text_updatetweet_button_tweet = "";
 	private String pref_tl_fontcolor_text_updatetweet_button_tweet_over = "";
@@ -2862,7 +2861,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 		WriteLog.write(this, ( logi++ ) + ": View");
 
 		// View色
-		pref_tl_bgcolor_updatetweet = pref_app.getString("pref_tl_bgcolor_updatetweet", "#000000");
+		final String pref_tl_bgcolor_updatetweet = pref_app.getString("pref_tl_bgcolor_updatetweet", "#000000");
 		pref_tl_fontcolor_text_updatetweet = pref_app.getString("pref_tl_fontcolor_text_updatetweet", "#ffffff");
 		pref_tl_fontcolor_text_updatetweet_over = pref_app.getString("pref_tl_fontcolor_text_updatetweet_over", "#ff0000");
 		pref_tl_fontcolor_text_updatetweet_button_tweet = pref_app.getString("pref_tl_fontcolor_text_updatetweet_button_tweet", "#ffffff");
@@ -3090,7 +3089,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 						}
 					});
 				}
-				final float pref_tl_fontsize_updatetweet = ListAdapter.getPrefFloat(UpdateTweet.this, "pref_tl_fontsize", "14");
+				final float pref_tl_fontsize_updatetweet = ListAdapter.getPrefFloat(UpdateTweet.this, "pref_tl_fontsize_updatetweet", "14");
 				if (pref_tl_fontsize_updatetweet > 0) {
 					runOnUiThread(new Runnable() {
 						@Override
@@ -3106,7 +3105,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 						}
 					});
 				}
-				final float pref_tl_fontsize_updatetweet_button = ListAdapter.getPrefFloat(UpdateTweet.this, "pref_tl_fontsize", "12");
+				final float pref_tl_fontsize_updatetweet_button = ListAdapter.getPrefFloat(UpdateTweet.this, "pref_tl_fontsize_updatetweet_button", "12");
 				if (pref_tl_fontsize_updatetweet_button > 0) {
 					runOnUiThread(new Runnable() {
 						@Override

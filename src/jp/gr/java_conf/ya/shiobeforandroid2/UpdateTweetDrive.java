@@ -69,7 +69,7 @@ public final class UpdateTweetDrive extends Activity implements LocationListener
 	private SharedPreferences pref_app;
 	private String crpKey = "";
 
-	private String pref_tl_bgcolor_updatetweet = "", pref_tl_fontcolor_text_updatetweet = "", pref_tl_fontcolor_text_updatetweet_over = "";
+	private String pref_tl_fontcolor_text_updatetweet = "", pref_tl_fontcolor_text_updatetweet_over = "";
 
 	private static final boolean currentThreadIsUiThread() {
 		return Looper.getMainLooper().getThread() == Thread.currentThread();
@@ -203,16 +203,21 @@ public final class UpdateTweetDrive extends Activity implements LocationListener
 			try {
 				WriteLog.write(this, "pref_tl_fontfilename: " + pref_tl_fontfilename);
 				fontUtil.loadFont(pref_tl_fontfilename, this);
+
+				fontUtil.setFont(editText2, this);
+				fontUtil.setFont(editText4, this);
+				fontUtil.setFont(editText5, this);
 			} catch (final Exception e) {
 				WriteLog.write(this, e);
 			}
 		}
 
-		fontUtil.setFont(editText2, this);
-		fontUtil.setFont(editText4, this);
-		fontUtil.setFont(editText5, this);
+		final float pref_tl_fontsize_updatetweet = ListAdapter.getPrefFloat(this, "pref_tl_fontsize_updatetweet", "14");
+		editText2.setTextSize(pref_tl_fontsize_updatetweet);
+		editText4.setTextSize(pref_tl_fontsize_updatetweet);
+		editText5.setTextSize(pref_tl_fontsize_updatetweet);
 
-		pref_tl_bgcolor_updatetweet = pref_app.getString("pref_tl_bgcolor_updatetweet", "#000000");
+		final String pref_tl_bgcolor_updatetweet = pref_app.getString("pref_tl_bgcolor_updatetweet", "#000000");
 		pref_tl_fontcolor_text_updatetweet = pref_app.getString("pref_tl_fontcolor_text_updatetweet", "#ffffff");
 		pref_tl_fontcolor_text_updatetweet_over = pref_app.getString("pref_tl_fontcolor_text_updatetweet_over", "#ff0000");
 

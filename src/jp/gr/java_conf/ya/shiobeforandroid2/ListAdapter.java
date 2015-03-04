@@ -1345,7 +1345,11 @@ public class ListAdapter extends BaseAdapter {
 			if (url.equals("") == false) {
 				// キャッシュ内アイコンの取得
 				if (bitmapLruCache.containsKey(url)) {
-					imageView.setImageBitmap(bitmapLruCache.getBitmap(url));
+					try {
+						imageView.setImageBitmap(bitmapLruCache.getBitmap(url));
+					} catch (Exception e) {
+						WriteLog.write(context, e);
+					}
 					return;
 				}
 				// ネット上アイコンの取得
@@ -1356,8 +1360,13 @@ public class ListAdapter extends BaseAdapter {
 						try {
 							final Bitmap icon = BitmapFactory.decodeStream(( new URL(url) ).openStream());
 							bitmapLruCache.putBitmap(url, icon);
-							imageView.setImageBitmap(icon);
+							( (Activity) context ).runOnUiThread(new Runnable() {
+								public final void run() {
+									imageView.setImageBitmap(icon);
+								}
+							});
 						} catch (final Exception e) {
+							WriteLog.write(context, e);
 						}
 					}
 				}).start();
@@ -1366,9 +1375,22 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	private final void getIconVolley(final ImageView imageView, final String url) {
-		final ImageListener listener = ImageLoader.getImageListener(imageView, android.R.drawable.spinner_background, android.R.drawable.ic_dialog_alert);
-		final ImageContainer imageContainer = mImageLoader.get(url, listener);
-		imageView.setTag(imageContainer);
+		new Thread(new Runnable() {
+			@Override
+			public final void run() {
+				( (Activity) context ).runOnUiThread(new Runnable() {
+					public final void run() {
+						try {
+							final ImageListener listener = ImageLoader.getImageListener(imageView, android.R.drawable.spinner_background, android.R.drawable.ic_dialog_alert);
+							final ImageContainer imageContainer = mImageLoader.get(url, listener);
+							imageView.setTag(imageContainer);
+						} catch (Exception e) {
+							WriteLog.write(context, e);
+						}
+					}
+				});
+			}
+		}).start();
 	}
 
 	@Override
@@ -3670,7 +3692,11 @@ public class ListAdapter extends BaseAdapter {
 			WriteLog.write(context, e);
 		}
 		if (icon != null) {
-			bitmapLruCache.putBitmap(url, icon);
+			try {
+				bitmapLruCache.putBitmap(url, icon);
+			} catch (Exception e) {
+				WriteLog.write(context, e);
+			}
 		}
 	}
 
@@ -3689,7 +3715,11 @@ public class ListAdapter extends BaseAdapter {
 			WriteLog.write(context, e);
 		}
 		if (icon != null) {
-			bitmapLruCache.putBitmap(url, icon);
+			try {
+				bitmapLruCache.putBitmap(url, icon);
+			} catch (Exception e) {
+				WriteLog.write(context, e);
+			}
 		}
 	}
 
@@ -4338,30 +4368,38 @@ public class ListAdapter extends BaseAdapter {
 					});
 				} else {
 					if (myUser != null) {
-						try {
-							getIcon(imageView, myUser.getProfileImageURLHttps());
+						( (Activity) context ).runOnUiThread(new Runnable() {
+							public final void run() {
+								try {
+									getIcon(imageView, myUser.getProfileImageURLHttps());
 
-							if (pref_show_profilebannerimage) {
-								final String profileBannerURL = myUser.getProfileBannerURL() == null ? "" : myUser.getProfileBannerURL();
+									if (pref_show_profilebannerimage) {
+										final String profileBannerURL = myUser.getProfileBannerURL() == null ? "" : myUser.getProfileBannerURL();
 
-								if (profileBannerURL.equals("") == false) {
-									getIcon(imageViewBackground, profileBannerURL);
-								} else {
-									getIcon(imageViewBackground, myUser.getProfileBackgroundImageUrlHttps());
+										if (profileBannerURL.equals("") == false) {
+											getIcon(imageViewBackground, profileBannerURL);
+										} else {
+											getIcon(imageViewBackground, myUser.getProfileBackgroundImageUrlHttps());
+										}
+									} else {
+										getIcon(imageViewBackground, myUser.getProfileBackgroundImageUrlHttps());
+									}
+								} catch (final Exception e) {
 								}
-							} else {
-								getIcon(imageViewBackground, myUser.getProfileBackgroundImageUrlHttps());
 							}
-						} catch (final Exception e) {
-						}
+						});
 					}
 
 					if (lightingColorFilterTlHeadericon != null) {
-						try {
-							imageView.setColorFilter(lightingColorFilterTlHeadericon);
-							imageViewBackground.setColorFilter(lightingColorFilterTlHeadericon);
-						} catch (final Exception e) {
-						}
+						( (Activity) context ).runOnUiThread(new Runnable() {
+							public final void run() {
+								try {
+									imageView.setColorFilter(lightingColorFilterTlHeadericon);
+									imageViewBackground.setColorFilter(lightingColorFilterTlHeadericon);
+								} catch (final Exception e) {
+								}
+							}
+						});
 					}
 				}
 			}
@@ -4429,37 +4467,34 @@ public class ListAdapter extends BaseAdapter {
 		this.select_pos = select_pos;
 	}
 
-	final void setTlOptionsMenu(final Menu menu, final boolean isStr) {
+	final void setTlOptionsMenu(final Menu menu) {
 		menu.add(0, R.string.updatetweet_lite, 0, R.string.updatetweet_lite).setIcon(android.R.drawable.ic_menu_edit).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		menu.add(0, R.string.enter_tl_uri, 0, R.string.enter_tl_uri).setIcon(android.R.drawable.ic_popup_sync);
 		menu.add(0, R.string.deljustbefore, 0, R.string.deljustbefore).setIcon(android.R.drawable.ic_menu_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		if (isStr) {
-			menu.add(0, R.string.streaming_restart, 0, R.string.streaming_restart).setIcon(android.R.drawable.ic_menu_revert);
-			menu.add(0, R.string.streaming_cleanup, 0, R.string.streaming_cleanup).setIcon(android.R.drawable.ic_popup_sync);
-		} else {
-			menu.add(0, R.string.load_tl_up, 0, R.string.load_tl_up).setIcon(android.R.drawable.arrow_up_float);
-			menu.add(0, R.string.load_tl_down, 0, R.string.load_tl_down).setIcon(android.R.drawable.arrow_down_float);
-		}
+		menu.add(0, R.string.load_tl_up, 0, R.string.load_tl_up).setIcon(android.R.drawable.arrow_up_float);
+		menu.add(0, R.string.load_tl_down, 0, R.string.load_tl_down).setIcon(android.R.drawable.arrow_down_float);
 
 		menu.add(0, R.string.move_tl_up, 0, R.string.move_tl_up).setIcon(android.R.drawable.stat_sys_upload);
 		menu.add(0, R.string.move_tl_unread, 0, R.string.move_tl_unread).setIcon(android.R.drawable.ic_menu_view).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		menu.add(0, R.string.move_tl_down, 0, R.string.move_tl_down).setIcon(android.R.drawable.stat_sys_download);
 		menu.add(0, R.string.search, 0, R.string.search).setIcon(android.R.drawable.ic_menu_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		if (isStr) {
-			menu.add(0, R.string.tts_streamingtl_on, 0, R.string.tts_streamingtl_on).setIcon(android.R.drawable.ic_lock_silent_mode_off);
-			menu.add(0, R.string.tts_streamingtl_off, 0, R.string.tts_streamingtl_off).setIcon(android.R.drawable.ic_lock_silent_mode);
-		} else {
-			final SubMenu sub1 = menu.addSubMenu(R.string.tl_repeat).setIcon(android.R.drawable.ic_menu_rotate);
-			sub1.add(0, R.string.tl_repeat_on, 0, R.string.tl_repeat_on);
-			sub1.add(0, R.string.tl_repeat_off, 0, R.string.tl_repeat_off);
-			sub1.setGroupCheckable(0, true, true);
-			final SubMenu sub2 = menu.addSubMenu(R.string.tl_speedy).setIcon(android.R.drawable.ic_media_ff);
-			sub2.add(0, R.string.tl_speedy_on, 0, R.string.tl_speedy_on);
-			sub2.add(0, R.string.tl_speedy_off, 0, R.string.tl_speedy_off);
-			sub2.setGroupCheckable(0, true, true);
-		}
+		final SubMenu sub0 = menu.addSubMenu(R.string.streaming).setIcon(android.R.drawable.ic_media_ff);
+		sub0.add(0, R.string.streaming_restart, 0, R.string.streaming_restart).setIcon(android.R.drawable.ic_menu_revert);
+		sub0.add(0, R.string.streaming_cleanup, 0, R.string.streaming_cleanup).setIcon(android.R.drawable.ic_popup_sync);
+		sub0.add(0, R.string.tts_streamingtl_on, 0, R.string.tts_streamingtl_on).setIcon(android.R.drawable.ic_lock_silent_mode_off);
+		sub0.add(0, R.string.tts_streamingtl_off, 0, R.string.tts_streamingtl_off).setIcon(android.R.drawable.ic_lock_silent_mode);
+		sub0.setGroupCheckable(0, true, true);
+
+		final SubMenu sub1 = menu.addSubMenu(R.string.tl_repeat).setIcon(android.R.drawable.ic_menu_rotate);
+		sub1.add(0, R.string.tl_repeat_on, 0, R.string.tl_repeat_on);
+		sub1.add(0, R.string.tl_repeat_off, 0, R.string.tl_repeat_off);
+		sub1.setGroupCheckable(0, true, true);
+		final SubMenu sub2 = menu.addSubMenu(R.string.tl_speedy).setIcon(android.R.drawable.ic_media_ff);
+		sub2.add(0, R.string.tl_speedy_on, 0, R.string.tl_speedy_on);
+		sub2.add(0, R.string.tl_speedy_off, 0, R.string.tl_speedy_off);
+		sub2.setGroupCheckable(0, true, true);
 
 		menu.add(0, R.string.check_ratelimit, 0, R.string.check_ratelimit).setIcon(android.R.drawable.stat_sys_download);
 		menu.add(0, R.string.check_apistatus, 0, R.string.check_apistatus).setIcon(android.R.drawable.stat_sys_download);
@@ -4525,27 +4560,31 @@ public class ListAdapter extends BaseAdapter {
 							}
 						});
 					} else {
-						getIcon(imageView, user.getProfileImageURLHttps());
+						( (Activity) context ).runOnUiThread(new Runnable() {
+							public final void run() {
+								getIcon(imageView, user.getProfileImageURLHttps());
 
-						if (pref_show_profilebannerimage) {
-							final String profileBannerURL = user.getProfileBannerURL() == null ? "" : user.getProfileBannerURL();
+								if (pref_show_profilebannerimage) {
+									final String profileBannerURL = user.getProfileBannerURL() == null ? "" : user.getProfileBannerURL();
 
-							if (profileBannerURL.equals("") == false) {
-								getIcon(imageViewBackground, profileBannerURL);
-							} else {
-								getIcon(imageViewBackground, user.getProfileBackgroundImageUrlHttps());
+									if (profileBannerURL.equals("") == false) {
+										getIcon(imageViewBackground, profileBannerURL);
+									} else {
+										getIcon(imageViewBackground, user.getProfileBackgroundImageUrlHttps());
+									}
+								} else {
+									getIcon(imageViewBackground, user.getProfileBackgroundImageUrlHttps());
+								}
+
+								if (lightingColorFilterTlHeadericon != null) {
+									try {
+										imageView.setColorFilter(lightingColorFilterTlHeadericon);
+										imageViewBackground.setColorFilter(lightingColorFilterTlHeadericon);
+									} catch (final Exception e) {
+									}
+								}
 							}
-						} else {
-							getIcon(imageViewBackground, user.getProfileBackgroundImageUrlHttps());
-						}
-
-						if (lightingColorFilterTlHeadericon != null) {
-							try {
-								imageView.setColorFilter(lightingColorFilterTlHeadericon);
-								imageViewBackground.setColorFilter(lightingColorFilterTlHeadericon);
-							} catch (final Exception e) {
-							}
-						}
+						});
 					}
 				}
 			}).start();
@@ -4964,29 +5003,32 @@ public class ListAdapter extends BaseAdapter {
 							}
 						});
 					} else {
-						getIcon(imageView, usrlist.getUser().getProfileImageURLHttps());
+						( (Activity) context ).runOnUiThread(new Runnable() {
+							public final void run() {
+								getIcon(imageView, usrlist.getUser().getProfileImageURLHttps());
 
-						if (pref_show_profilebannerimage) {
-							final String profileBannerURL = usrlist.getUser().getProfileBannerURL() == null ? "" : usrlist.getUser().getProfileBannerURL();
+								if (pref_show_profilebannerimage) {
+									final String profileBannerURL = usrlist.getUser().getProfileBannerURL() == null ? "" : usrlist.getUser().getProfileBannerURL();
 
-							if (profileBannerURL.equals("") == false) {
-								getIcon(imageViewBackground, profileBannerURL);
-							} else {
-								getIcon(imageViewBackground, usrlist.getUser().getProfileBackgroundImageUrlHttps());
+									if (profileBannerURL.equals("") == false) {
+										getIcon(imageViewBackground, profileBannerURL);
+									} else {
+										getIcon(imageViewBackground, usrlist.getUser().getProfileBackgroundImageUrlHttps());
+									}
+								} else {
+									getIcon(imageViewBackground, usrlist.getUser().getProfileBackgroundImageUrlHttps());
+								}
+
+								if (lightingColorFilterTlHeadericon != null) {
+									try {
+										imageView.setColorFilter(lightingColorFilterTlHeadericon);
+										imageViewBackground.setColorFilter(lightingColorFilterTlHeadericon);
+									} catch (final Exception e) {
+										WriteLog.write(context, e);
+									}
+								}
 							}
-						} else {
-							getIcon(imageViewBackground, usrlist.getUser().getProfileBackgroundImageUrlHttps());
-						}
-
-						if (lightingColorFilterTlHeadericon != null) {
-							try {
-								imageView.setColorFilter(lightingColorFilterTlHeadericon);
-								imageViewBackground.setColorFilter(lightingColorFilterTlHeadericon);
-							} catch (final Exception e) {
-								WriteLog.write(context, e);
-								// toast(context.getString(R.string.exception));
-							}
-						}
+						});
 					}
 				}
 			}).start();

@@ -515,7 +515,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 	@Override
 	public final boolean onCreateOptionsMenu(final Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		adapter.setTlOptionsMenu(menu, true);
+		adapter.setTlOptionsMenu(menu);
 		return true;
 	}
 

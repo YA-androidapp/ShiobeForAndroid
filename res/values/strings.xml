@@ -699,6 +699,7 @@
     <string name="sound">サウンド</string>
     <string name="ssv">半角スペース区切り</string>
     <string name="status_id">ツイートID</string>
+    <string name="streaming">UserStream</string>
     <string name="streaming_cleanup">UserStream クリーンアップ</string>
     <string name="streaming_restart">UserStream リスタート</string>
     <string name="streaming_start">UserStream スタート</string>
