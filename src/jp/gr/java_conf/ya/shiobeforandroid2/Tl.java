@@ -236,7 +236,7 @@ public class Tl extends Activity implements ConnectionReceiver.Observer, TextToS
 					final String[] screenNameAndListName2 = uriStringReplaced.split("/");
 					if (screenNameAndListName2.length == 2) {
 						WriteLog.write(Tl.this, "screenNameAndListName2[0]: " + screenNameAndListName2[0] + " screenNameAndListName2[1]: " + screenNameAndListName2[1]);
-						if (screenNameAndListName[0].equals("")) {
+						if (screenNameAndListName2[0].equals("")) {
 							final int index = adapter.checkIndexFromPrefTwtr();
 							return adapter.getTwitter(index, false).getUserListStatuses(adapter.checkScreennameFromIndex(index), screenNameAndListName2[1], paging);
 						} else {

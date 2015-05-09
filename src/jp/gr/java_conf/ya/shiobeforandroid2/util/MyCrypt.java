@@ -9,9 +9,11 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import jp.gr.java_conf.ya.shiobeforandroid2.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Base64;
+import android.widget.Toast;
 
 public final class MyCrypt {
 	public static final String decrypt(final Context context, final String key, final String encrypted_str) {
@@ -32,6 +34,7 @@ public final class MyCrypt {
 		} catch (final IllegalBlockSizeException e) {
 			WriteLog.write(context, e);
 		} catch (final BadPaddingException e) {
+			Toast.makeText(context, context.getText(R.string.bad_padding_exception), Toast.LENGTH_SHORT).show();
 			WriteLog.write(context, e);
 		} catch (final Exception e) {
 			WriteLog.write(context, e);

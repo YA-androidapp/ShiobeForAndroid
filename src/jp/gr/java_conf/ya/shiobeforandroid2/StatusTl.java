@@ -105,10 +105,13 @@ public final class StatusTl extends Activity {
 
 		final String pref_header_bgcolor = pref_app.getString("pref_header_bgcolor", "#000000");
 		final TlViewLayoutUtil tlViewLayoutUtil = new TlViewLayoutUtil(pref_enable_singleline, pref_header_height, pref_tl_fontsize, pref_tl_iconsize1, pref_header_bgcolor, "", "");
-		final LinearLayout linearLayout1 = tlViewLayoutUtil.getTlViewLayout1(this, false);
 		listView = new ListView(this);
 		listView.setLayoutParams(new LinearLayout.LayoutParams(MP, WC));
-		listView.addHeaderView(linearLayout1, null, false);
+		final boolean hide_statustl_header = pref_app.getBoolean("hide_statustl_header", false);
+		if (hide_statustl_header == false) {
+			final LinearLayout linearLayout1 = tlViewLayoutUtil.getTlViewLayout1(this, false);
+			listView.addHeaderView(linearLayout1, null, false);
+		}
 		final String pref_listview_bgcolor = pref_app.getString("pref_listview_bgcolor", "#000000");
 		if (pref_listview_bgcolor.equals("") == false) {
 			try {
@@ -142,7 +145,9 @@ public final class StatusTl extends Activity {
 					statusId = Long.parseLong(intent_statusId);
 				} catch (final Exception e) {
 				}
-				adapter.setUserInfo(userName);
+				if (hide_statustl_header == false) {
+					adapter.setUserInfo(userName);
+				}
 				updateStatuses(userName, statusId);
 				return;
 			}
@@ -159,7 +164,9 @@ public final class StatusTl extends Activity {
 						statusId = Long.parseLong(statusIdArray[statusIdArray.length - 1]);
 					} catch (final Exception e) {
 					}
-					adapter.setUserInfo(userName);
+					if (hide_statustl_header == false) {
+						adapter.setUserInfo(userName);
+					}
 					updateStatuses(userName, statusId);
 					return;
 				}

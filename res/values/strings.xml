@@ -57,6 +57,7 @@
     <string name="autotweet_wait">設定時刻から投稿するまでの待ち時間</string>
     <string name="back">戻る</string>
     <string name="backbutton_singleclick">長押しすると前画面に戻ります</string>
+    <string name="bad_padding_exception">鍵が異なるため復号できません</string>
     <string name="batterywidget">BatteryWidget</string>
     <string name="batterywidget_tweet_index">投稿に利用するアカウントのインデックス</string>
     <string name="batterywidget_tweet_interval">投稿するパーセンテージの間隔</string>

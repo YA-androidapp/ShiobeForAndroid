@@ -131,33 +131,42 @@ public class ShiobeForAndroidActivity extends Activity {
 		if (( pref_enable_consumerKey == true ) && ( pref_consumerKey.equals("") == false ) && ( pref_consumerSecret.equals("") == false )) {
 			consumerKey = pref_consumerKey;
 			consumerSecret = pref_consumerSecret;
-		} else {
+		} else if (pref_enable_consumerKey == false) {
 			consumerKey = getString(R.string.default_consumerKey);
 			consumerSecret = getString(R.string.default_consumerSecret);
-		}
-		if (pref_consumerKey.equals("") || pref_consumerSecret.equals("")) {
+		} else {
 			adapter.toast(getString(R.string.consumerkey_orand_secret_is_empty));
 
 			pref_app = PreferenceManager.getDefaultSharedPreferences(this);
 			final EditText editText = new EditText(this);
-			new AlertDialog.Builder(this).setTitle(R.string.consumerkey_orand_secret_is_empty).setMessage(R.string.enter_consumerkey_and_secret_ssv).setView(editText).setCancelable(true).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+			if (( pref_consumerKey.equals("") == false ) && ( pref_consumerSecret.equals("") == false )) {
+				editText.setText(pref_consumerKey + " " + pref_consumerSecret);
+			} else if (( pref_consumerKey.equals("") == false ) && ( pref_consumerSecret.equals("") )) {
+				editText.setText(pref_consumerKey + " " + getString(R.string.default_consumerSecret));
+			} else if (( pref_consumerKey.equals("") ) && ( pref_consumerSecret.equals("") == false )) {
+				editText.setText(getString(R.string.default_consumerKey) + " " + pref_consumerSecret);
+			} else {
+				editText.setText(getString(R.string.default_consumerKey) + " " + getString(R.string.default_consumerSecret));
+			}
+			new AlertDialog.Builder(this).setTitle(R.string.consumerkey_orand_secret_is_empty).setMessage(R.string.enter_consumerkey_and_secret_ssv).setView(editText).setCancelable(true).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public final void onClick(final DialogInterface dialog, final int which) {
-					return;
-				}
-			}).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				@Override
-				public final void onClick(final DialogInterface dialog, final int which) {
-					final SharedPreferences.Editor editor = pref_app.edit();
-					editor.putBoolean("pref_enable_consumerkey", true);
-					editor.putString("pref_consumerkey", ( editText.getText().toString() ).split(" ")[0]);
-					editor.putString("pref_consumersecret", ( editText.getText().toString() ).split(" ")[1]);
-					editor.commit();
+					final String[] consumerKeyAndSecret = ( editText.getText().toString() ).split(" ");
+					if (consumerKeyAndSecret.length == 2) {
+						final SharedPreferences.Editor editor = pref_app.edit();
+						editor.putBoolean("pref_enable_consumerkey", true);
+						editor.putString("pref_consumerkey", ( consumerKeyAndSecret[0] ));
+						editor.putString("pref_consumersecret", ( consumerKeyAndSecret[1] ));
+						editor.commit();
 
-					try {
-						connectTwitter();
-					} catch (TwitterException e) {
-						WriteLog.write(ShiobeForAndroidActivity.this, e);
+						consumerKey = consumerKeyAndSecret[0];
+						consumerSecret = consumerKeyAndSecret[1];
+
+						try {
+							connectTwitter();
+						} catch (TwitterException e) {
+							WriteLog.write(ShiobeForAndroidActivity.this, e);
+						}
 					}
 				}
 			}).create().show();
