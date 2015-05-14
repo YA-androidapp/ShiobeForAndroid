@@ -107,12 +107,10 @@
     <string-array name="pref_twitterlogin_mode_entries">
         <item>通常</item>
         <item>Intent</item>
-        <item>PIN</item>
     </string-array>
     <string-array name="pref_twitterlogin_mode_entryvalues">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
     </string-array>
     <string-array name="pref_tl_fontfamily_name_entries">
         <item>DEFAULT</item>

@@ -5823,7 +5823,7 @@ public class ListAdapter extends BaseAdapter {
 		}).start();
 	}
 
-	private final void twitterException(final TwitterException e) {
+	final void twitterException(final TwitterException e) {
 		if (e.exceededRateLimitation()) {
 			toast(context.getString(R.string.ratelimit_exhausted));
 		} else {

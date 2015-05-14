@@ -131,6 +131,7 @@
     <string name="confirmdialog_summary">f:全垢で実行</string>
     <string name="confirmdialog_userrt">非公式リツイート</string>
     <string name="consumerkey">Consumer Key</string>
+    <string name="consumerkey_default">既定のConsumer Keyを用います</string>
     <string name="consumerkey_orand_secret_is_empty">Consumer KeyとConsumer Secretの両方を設定して下さい</string>
     <string name="consumersecret">Consumer Secret</string>
     <string name="cooperation_url">Web版のURL</string>

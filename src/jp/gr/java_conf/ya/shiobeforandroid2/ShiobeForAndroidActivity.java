@@ -129,12 +129,15 @@ public class ShiobeForAndroidActivity extends Activity {
 		final String pref_consumerSecret = pref_app.getString("pref_consumersecret", "");
 		final Boolean pref_enable_consumerKey = pref_app.getBoolean("pref_enable_consumerkey", false);
 		if (( pref_enable_consumerKey == true ) && ( pref_consumerKey.equals("") == false ) && ( pref_consumerSecret.equals("") == false )) {
-			consumerKey = pref_consumerKey;
-			consumerSecret = pref_consumerSecret;
-		} else if (pref_enable_consumerKey == false) {
+			consumerKey = pref_consumerKey.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", "");
+			consumerSecret = pref_consumerSecret.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", "");
+		} else {
 			consumerKey = getString(R.string.default_consumerKey);
 			consumerSecret = getString(R.string.default_consumerSecret);
-		} else {
+			adapter.toast(getString(R.string.consumerkey_default));
+		}
+
+		if (pref_consumerKey.equals("") || pref_consumerSecret.equals("")) {
 			adapter.toast(getString(R.string.consumerkey_orand_secret_is_empty));
 
 			pref_app = PreferenceManager.getDefaultSharedPreferences(this);
@@ -170,73 +173,81 @@ public class ShiobeForAndroidActivity extends Activity {
 					}
 				}
 			}).create().show();
-			return;
-		}
-		pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
-		pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
 
-		final String pref_twitterlogin_mode = pref_app.getString("pref_twitterlogin_mode", "0");
-		WriteLog.write(this, "pref_twitterlogin_mode: " + pref_twitterlogin_mode);
-
-		if (pref_twitterlogin_mode.equals("1")) {
-			final ConfigurationBuilder confbuilder = new ConfigurationBuilder();
-			confbuilder.setOAuthConsumerKey(consumerKey);
-			confbuilder.setOAuthConsumerSecret(consumerSecret);
-			final Configuration conf = confbuilder.build();
-			oAuthAuthorization = new OAuthAuthorization(conf);
-			oAuthAuthorization.setOAuthAccessToken(null);
-			String authUrl = null;
-			try {
-				authUrl = oAuthAuthorization.getOAuthRequestToken(CALLBACK_URL).getAuthorizationURL();
-			} catch (final Exception e) {
-				return;
-			}
-			final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl));
-			startActivity(intent);
-		} else if (pref_twitterlogin_mode.equals("2")) {
-			final ConfigurationBuilder confbuilder = new ConfigurationBuilder();
-			confbuilder.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret).setHttpConnectionTimeout(pref_timeout_t4j_connection).setHttpReadTimeout(pref_timeout_t4j_read);// .setUseSSL(true);
-			twitter = new TwitterFactory(confbuilder.build()).getInstance();
-			try {
-				requestToken = twitter.getOAuthRequestToken(CALLBACK_URL);
-			} catch (final TwitterException e) {
-				WriteLog.write(this, e);
-			} catch (final Exception e) {
-				WriteLog.write(this, e);
-			}
-			String authorizationUrl = "";
-			try {
-				authorizationUrl = requestToken.getAuthorizationURL();
-			} catch (final Exception e) {
-			}
-			if (authorizationUrl.equals("") == false) {
-				final Intent intent = new Intent(this, TwitterLoginPin.class);
-				intent.putExtra("auth_url", authorizationUrl);
-				intent.putExtra("consumer_key", consumerKey);
-				intent.putExtra("consumer_secret", consumerSecret);
-				startActivityForResult(intent, 0);
-			}
 		} else {
-			ConfigurationBuilder confbuilder = new ConfigurationBuilder();
-			confbuilder.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret).setHttpConnectionTimeout(pref_timeout_t4j_connection).setHttpReadTimeout(pref_timeout_t4j_read).setHttpRetryCount(3).setHttpRetryIntervalSeconds(10);// .setUseSSL(true);
-			twitter = new TwitterFactory(confbuilder.build()).getInstance();
-			try {
-				requestToken = twitter.getOAuthRequestToken(CALLBACK_URL);
-			} catch (final TwitterException e) {
-				WriteLog.write(this, e);
-			} catch (final Exception e) {
-				WriteLog.write(this, e);
-			}
-			String authorizationUrl = "";
-			try {
-				authorizationUrl = requestToken.getAuthorizationURL();
-			} catch (final Exception e) {
-				WriteLog.write(this, e);
-			}
-			if (authorizationUrl.equals("") == false) {
-				final Intent intent = new Intent(this, TwitterLogin.class);
-				intent.putExtra("auth_url", authorizationUrl);
-				this.startActivityForResult(intent, 0);
+
+			pref_timeout_t4j_connection = ListAdapter.getPrefInt(this, "pref_timeout_t4j_connection", "20000");
+			pref_timeout_t4j_read = ListAdapter.getPrefInt(this, "pref_timeout_t4j_read", "120000");
+
+			final String pref_twitterlogin_mode = pref_app.getString("pref_twitterlogin_mode", "0");
+			WriteLog.write(this, "pref_twitterlogin_mode: " + pref_twitterlogin_mode);
+
+			if (pref_twitterlogin_mode.equals("1")) {
+				final ConfigurationBuilder confbuilder = new ConfigurationBuilder();
+				confbuilder.setOAuthConsumerKey(consumerKey);
+				confbuilder.setOAuthConsumerSecret(consumerSecret);
+				final Configuration conf = confbuilder.build();
+				oAuthAuthorization = new OAuthAuthorization(conf);
+				oAuthAuthorization.setOAuthAccessToken(null);
+				String authUrl = null;
+				try {
+					authUrl = oAuthAuthorization.getOAuthRequestToken(CALLBACK_URL).getAuthorizationURL();
+				} catch (final Exception e) {
+					return;
+				}
+				final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl));
+				startActivity(intent);
+
+				//			} else if (pref_twitterlogin_mode.equals("2")) {
+				//				final ConfigurationBuilder confbuilder = new ConfigurationBuilder();
+				//				confbuilder.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret).setHttpConnectionTimeout(pref_timeout_t4j_connection).setHttpReadTimeout(pref_timeout_t4j_read);// .setUseSSL(true);
+				//				twitter = new TwitterFactory(confbuilder.build()).getInstance();
+				//				try {
+				//					requestToken = twitter.getOAuthRequestToken(CALLBACK_URL);
+				//				} catch (final TwitterException e) {
+				//					WriteLog.write(this, e);
+				//				} catch (final Exception e) {
+				//					WriteLog.write(this, e);
+				//				}
+				//				if (requestToken != null) {
+				//					String authorizationUrl = "";
+				//					try {
+				//						authorizationUrl = requestToken.getAuthorizationURL();
+				//					} catch (final Exception e) {
+				//					}
+				//					if (authorizationUrl.equals("") == false) {
+				//						final Intent intent = new Intent(this, TwitterLoginPin.class);
+				//						intent.putExtra("auth_url", authorizationUrl);
+				//						intent.putExtra("consumer_key", consumerKey);
+				//						intent.putExtra("consumer_secret", consumerSecret);
+				//						startActivityForResult(intent, 0);
+				//					}
+				//				}
+
+			} else {
+				ConfigurationBuilder confbuilder = new ConfigurationBuilder();
+				confbuilder.setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret).setHttpConnectionTimeout(pref_timeout_t4j_connection).setHttpReadTimeout(pref_timeout_t4j_read).setHttpRetryCount(3).setHttpRetryIntervalSeconds(10);// .setUseSSL(true);
+				twitter = new TwitterFactory(confbuilder.build()).getInstance();
+				try {
+					requestToken = twitter.getOAuthRequestToken(CALLBACK_URL);
+				} catch (final TwitterException e) {
+					adapter.twitterException(e);
+				} catch (final Exception e) {
+					WriteLog.write(this, e);
+				}
+				if (requestToken != null) {
+					String authorizationUrl = "";
+					try {
+						authorizationUrl = requestToken.getAuthorizationURL();
+					} catch (final Exception e) {
+						WriteLog.write(this, e);
+					}
+					if (authorizationUrl.equals("") == false) {
+						final Intent intent = new Intent(this, TwitterLogin.class);
+						intent.putExtra("auth_url", authorizationUrl);
+						this.startActivityForResult(intent, 0);
+					}
+				}
 			}
 		}
 	}
@@ -392,8 +403,8 @@ public class ShiobeForAndroidActivity extends Activity {
 					final String pref_consumerSecret = pref_app.getString("pref_consumersecret", "");
 					final Boolean pref_enable_consumerKey = pref_app.getBoolean("pref_enable_consumerkey", false);
 					if (( pref_enable_consumerKey == true ) && ( pref_consumerKey.equals("") == false ) && ( pref_consumerSecret.equals("") == false )) {
-						consumerKey = pref_consumerKey;
-						consumerSecret = pref_consumerSecret;
+						consumerKey = pref_consumerKey.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", "");
+						consumerSecret = pref_consumerSecret.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", "");
 					} else {
 						consumerKey = getString(R.string.default_consumerKey);
 						consumerSecret = getString(R.string.default_consumerSecret);
@@ -706,8 +717,8 @@ public class ShiobeForAndroidActivity extends Activity {
 				final String pref_consumerSecret = pref_app.getString("pref_consumersecret", "");
 				final Boolean pref_enable_consumerKey = pref_app.getBoolean("pref_enable_consumerkey", false);
 				if (( pref_enable_consumerKey == true ) && ( pref_consumerKey.equals("") == false ) && ( pref_consumerSecret.equals("") == false )) {
-					consumerKey = pref_consumerKey;
-					consumerSecret = pref_consumerSecret;
+					consumerKey = pref_consumerKey.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", "");
+					consumerSecret = pref_consumerSecret.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", "");
 				} else {
 					consumerKey = getString(R.string.default_consumerKey);
 					consumerSecret = getString(R.string.default_consumerSecret);
@@ -727,14 +738,19 @@ public class ShiobeForAndroidActivity extends Activity {
 					final TwitterFactory twitterFactory = new TwitterFactory(configuration);
 					twitter = twitterFactory.getInstance();
 				} catch (final Exception e) {
+					WriteLog.write(this, e);
 				}
 
 				String profile_image_url = "";
-				try {
-					final User user = twitter.showUser(twitter.getScreenName());
-					profile_image_url = user.getProfileImageURL().toString();
-				} catch (final IllegalStateException e) {
-					WriteLog.write(this, e);
+				if (twitter != null) {
+					try {
+						final User user = twitter.showUser(twitter.getScreenName());
+						profile_image_url = user.getProfileImageURL().toString();
+					} catch (final IllegalStateException e) {
+						WriteLog.write(this, e);
+					} catch (final Exception e) {
+						WriteLog.write(this, e);
+					}
 				}
 
 				pref_twtr = getSharedPreferences("Twitter_setting", MODE_PRIVATE);
