@@ -3,7 +3,7 @@
 <!-- Copyright (c) 2013-2015 YA <ya.androidapp@gmail.com> All rights reserved. -->
  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
  package="jp.gr.java_conf.ya.shiobeforandroid2" android:installLocation="auto"
- android:versionCode="206" android:versionName="1.0.150514">
+ android:versionCode="207" android:versionName="1.0.150613">
 
  <supports-screens android:anyDensity="true"
   android:largeScreens="true" android:normalScreens="true"

@@ -16,7 +16,8 @@
                     android:key="pref_userrt_format"
                     android:summary="%USER%: ScreenName, %TEXT%: Text"
                     android:title="@string/userrt_format" />
-                <CheckBoxPreference
+
+                <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="pref_enable_userrt_format_via"
                     android:title="@string/enable_userrt_format_via" />
@@ -795,10 +796,6 @@
                         android:title="@string/enable_network_auto_reconnect" >
                         <CheckBoxPreference
                             android:defaultValue="false"
-                            android:key="pref_enable_network_auto_reconnect"
-                            android:title="@string/enable_network_auto_reconnect" />
-                        <CheckBoxPreference
-                            android:defaultValue="false"
                             android:key="pref_enable_network_auto_reconnect_wifi"
                             android:title="@string/enable_network_auto_reconnect_wifi" />
                         <CheckBoxPreference
@@ -811,10 +808,6 @@
                     <PreferenceCategory
                         android:key="enable_network_auto_disconnect"
                         android:title="@string/enable_network_auto_disconnect" >
-                        <CheckBoxPreference
-                            android:defaultValue="false"
-                            android:key="pref_enable_network_auto_disconnect"
-                            android:title="@string/enable_network_auto_disconnect" />
                         <CheckBoxPreference
                             android:defaultValue="false"
                             android:key="pref_enable_network_auto_disconnect_wifi"
@@ -1803,8 +1796,12 @@
                         android:title="@string/inline_img" >
                         <CheckBoxPreference
                             android:defaultValue="true"
-                            android:key="pref_enable_inline_img"
-                            android:title="@string/enable_inline_img" />
+                            android:key="pref_enable_inline_img_wifi"
+                            android:title="@string/enable_inline_img_wifi" />
+                        <CheckBoxPreference
+                            android:defaultValue="false"
+                            android:key="pref_enable_inline_img_mobile"
+                            android:title="@string/enable_inline_img_mobile" />
                         <CheckBoxPreference
                             android:defaultValue="false"
                             android:key="pref_enable_inline_img_async"

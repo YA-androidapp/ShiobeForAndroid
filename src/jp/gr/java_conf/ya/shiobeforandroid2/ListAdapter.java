@@ -154,10 +154,11 @@ public class ListAdapter extends BaseAdapter {
 	private boolean pref_enable_expand_uri_twitter_tweetmenu_wifi = true;
 	private boolean pref_enable_expand_uri_twitter_wifi = true;
 	private boolean pref_enable_htmlescape = true;
-	private boolean pref_enable_inline_img = true;
 	private boolean pref_enable_inline_img_async;
 	private boolean pref_enable_inline_img_volley = false;
 	private boolean pref_enable_inline_img_volley_cancel = true;
+	private boolean pref_enable_inline_img_mobile = false;
+	private boolean pref_enable_inline_img_wifi = true;
 	private boolean pref_enable_log_statuses;
 	private boolean pref_enable_singleline;
 	private boolean pref_enable_smoothscroll_load;
@@ -471,13 +472,11 @@ public class ListAdapter extends BaseAdapter {
 		pref_enable_expand_uri_string_length = getPrefInt("pref_enable_expand_uri_string_length", "30");
 		pref_enable_expand_uri_thirdparty_mobile = pref_app.getBoolean("pref_enable_expand_uri_thirdparty_mobile", false);
 		pref_enable_expand_uri_thirdparty_tweetmenu_mobile = pref_app.getBoolean("pref_enable_expand_uri_thirdparty_tweetmenu_mobile", true);
-		pref_enable_expand_uri_thirdparty_wifi = pref_app.getBoolean("pref_enable_expand_uri_thirdparty_wifi", false);
 		pref_enable_expand_uri_twitter_mobile = pref_app.getBoolean("pref_enable_expand_uri_twitter_mobile", true);
 		pref_enable_expand_uri_twitter_tweetmenu_mobile = pref_app.getBoolean("pref_enable_expand_uri_twitter_tweetmenu_mobile", true);
-		pref_enable_expand_uri_twitter_wifi = pref_app.getBoolean("pref_enable_expand_uri_twitter_wifi", true);
 		pref_enable_htmlescape = pref_app.getBoolean("pref_enable_htmlescape", default_enable_htmlescape);
-		pref_enable_inline_img = pref_app.getBoolean("pref_enable_inline_img", true);
 		pref_enable_inline_img_async = pref_app.getBoolean("pref_enable_inline_img_async", false);
+		pref_enable_inline_img_mobile = pref_app.getBoolean("pref_enable_inline_img_mobile", false);
 		pref_enable_inline_img_volley = pref_app.getBoolean("pref_enable_inline_img_volley", false);
 		pref_enable_inline_img_volley_cancel = pref_app.getBoolean("pref_enable_inline_img_volley_cancel", true);
 		pref_enable_log_statuses = pref_app.getBoolean("pref_enable_log_statuses", false);
@@ -575,7 +574,10 @@ public class ListAdapter extends BaseAdapter {
 		lightingColorFilterTlHeadericon = getLightingColorFilter(pref_filter_tl_headericon);
 
 		pref_enable_expand_uri_thirdparty_tweetmenu_wifi = pref_enable_tl_speedy ? pref_enable_expand_uri_thirdparty_tweetmenu_mobile : pref_enable_expand_uri_thirdparty_tweetmenu_wifi;
+		pref_enable_expand_uri_thirdparty_wifi = pref_enable_tl_speedy ? pref_enable_expand_uri_thirdparty_mobile : pref_app.getBoolean("pref_enable_expand_uri_thirdparty_wifi", false);
 		pref_enable_expand_uri_twitter_tweetmenu_wifi = pref_enable_tl_speedy ? pref_enable_expand_uri_twitter_tweetmenu_mobile : pref_enable_expand_uri_twitter_tweetmenu_wifi;
+		pref_enable_expand_uri_twitter_wifi = pref_enable_tl_speedy ? pref_enable_expand_uri_twitter_mobile : pref_app.getBoolean("pref_enable_expand_uri_twitter_wifi", true);
+		pref_enable_inline_img_wifi = pref_enable_tl_speedy ? pref_enable_inline_img_mobile : pref_app.getBoolean("pref_enable_inline_img_wifi", true);
 		pref_tl_iconsize1 = (int) ( pref_tl_fontsize * dpi * ( ( pref_enable_singleline ) ? 2.0f : ( 4.0f * getPrefFloat("pref_tl_iconsize", "1") ) ) );
 		pref_tl_iconsize2 = (int) ( pref_tl_fontsize * dpi * ( ( pref_enable_singleline ) ? 1.0f : ( 2.0f * getPrefFloat("pref_tl_iconsize", "1") ) ) );
 		pref_tl_imagesize = pref_tl_fontsize * dpi * ( ( pref_enable_singleline ) ? 2.0f : ( 4.0f * getPrefFloat("pref_tl_imagesize", "1") ) );
@@ -2221,7 +2223,7 @@ public class ListAdapter extends BaseAdapter {
 				}
 			}
 
-			if (pref_enable_inline_img && ( !pref_enable_tl_speedy )) {
+			if (pref_enable_inline_img_wifi && ( !pref_enable_tl_speedy )) {
 				if (tweet_retweetedStatus.getExtendedMediaEntities() != null) {
 					if (tweet_retweetedStatus.getExtendedMediaEntities().length > 1) {
 						statusText = replaceAllMedia(statusText, fontcolor_statustext, tweet_retweetedStatus.getExtendedMediaEntities());
@@ -3731,7 +3733,7 @@ public class ListAdapter extends BaseAdapter {
 				}
 			}
 		}
-		if (pref_enable_inline_img) {
+		if (pref_enable_inline_img_wifi) {
 			if (status.getMediaEntities() != null) {
 				for (final MediaEntity mediaEntity : status.getMediaEntities()) {
 					preloadIcon(mediaEntity.getMediaURLHttps());
@@ -3876,6 +3878,8 @@ public class ListAdapter extends BaseAdapter {
 		if (pref_enable_tl_speedy) {
 			pref_enable_expand_uri_twitter_wifi = pref_enable_expand_uri_twitter_mobile;
 			pref_enable_expand_uri_thirdparty_wifi = pref_enable_expand_uri_thirdparty_mobile;
+
+			pref_enable_inline_img_wifi = pref_enable_inline_img_mobile;
 		}
 
 		for (final URLEntity urlEntity : urlEntities) {

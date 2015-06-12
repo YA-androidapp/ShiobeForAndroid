@@ -233,8 +233,10 @@
     <string name="enable_individual_shortcut_summary">タイムラインのショートカットで共通Activityではなく個別Activityを開きます</string>
     <string name="enable_inline_img">インライン画像を表示</string>
     <string name="enable_inline_img_async">非同期（レイアウトが崩れる可能性があります）</string>
+    <string name="enable_inline_img_mobile">インライン画像を表示(データ通信)</string>
     <string name="enable_inline_img_volley">画像の読み込みにVolleyを利用する</string>
     <string name="enable_inline_img_volley_cancel">Volley利用時の画面外キャンセル処理を有効にする</string>
+    <string name="enable_inline_img_wifi">インライン画像を表示(Wi-Fi)</string>
     <string name="enable_keep_headerfooter">投稿後にヘッダ・フッタを消去しない</string>
     <string name="enable_kiriban">キリ番で自動投稿</string>
     <string name="enable_locationinfo_exception">次の区域では位置情報を無効にする</string>

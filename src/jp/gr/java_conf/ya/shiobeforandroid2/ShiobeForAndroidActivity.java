@@ -69,7 +69,7 @@ public class ShiobeForAndroidActivity extends Activity {
 	private final class FileCheck_font implements FilenameFilter {
 		@Override
 		public final boolean accept(final File dir, final String strfilename) {
-			if (( strfilename.endsWith(".ttf") ) || ( strfilename.endsWith(".zip") )) {
+			if (( strfilename.endsWith(".ttf") ) || ( strfilename.endsWith(".ttc") ) || ( strfilename.endsWith(".otf") ) || ( strfilename.endsWith(".otc") ) || ( strfilename.endsWith(".zip") )) {
 				return true;
 			} else {
 				return false;

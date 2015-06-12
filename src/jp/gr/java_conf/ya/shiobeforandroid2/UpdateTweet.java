@@ -1719,7 +1719,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 				if (intentStrTweetImagePathString.equals("") == false) {
 					WriteLog.write(UpdateTweet.this, "get_intent() runOnUiThread() intentStrTweetImagePathString: " + intentStrTweetImagePathString);
 
-					final String[] intentStrTweetImagePathStringArray = intentStrTweetImagePathString.split("\\\\\\");
+					final String[] intentStrTweetImagePathStringArray = intentStrTweetImagePathString.split("\n");
 					for (String s : intentStrTweetImagePathStringArray) {
 						if (s.startsWith("file://")) {
 							try {
@@ -1833,7 +1833,7 @@ public final class UpdateTweet extends Activity implements LocationListener, Vie
 			for (File imagePath : imagePaths) {
 				sb.append(imagePath.getAbsolutePath());
 				if (i < limit) {
-					sb.append("\\\\\\");
+					sb.append("\n");
 				}
 
 				i++;

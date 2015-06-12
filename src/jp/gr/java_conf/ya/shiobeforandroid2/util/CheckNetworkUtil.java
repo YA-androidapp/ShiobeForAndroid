@@ -51,11 +51,9 @@ public final class CheckNetworkUtil {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(context);
 		final String pref_network_wifi_ssid_exception = pref_app.getString("pref_network_wifi_ssid_exception", "");
 
-		boolean pref_enable_network_auto_reconnect = pref_app.getBoolean("pref_enable_network_auto_reconnect", false);
 		boolean pref_enable_network_auto_reconnect_wifi = pref_app.getBoolean("pref_enable_network_auto_reconnect_wifi", false);
 		boolean pref_enable_network_auto_reconnect_mobile = pref_app.getBoolean("pref_enable_network_auto_reconnect_mobile", false);
 		if (isAutoTweet) {
-			pref_enable_network_auto_reconnect = pref_app.getBoolean("pref_enable_network_auto_reconnect_autotweet", false);
 			pref_enable_network_auto_reconnect_wifi = pref_app.getBoolean("pref_enable_network_auto_reconnect_wifi_autotweet", false);
 			pref_enable_network_auto_reconnect_mobile = pref_app.getBoolean("pref_enable_network_auto_reconnect_mobile_autotweet", false);
 		}
@@ -107,17 +105,14 @@ public final class CheckNetworkUtil {
 			}
 		}
 
-		final boolean final_pref_enable_network_auto_reconnect = pref_enable_network_auto_reconnect;
 		final boolean final_pref_enable_network_auto_reconnect_wifi = pref_enable_network_auto_reconnect_wifi;
 		final boolean final_pref_enable_network_auto_reconnect_mobile = pref_enable_network_auto_reconnect_mobile;
 		new Thread(new Runnable() {
 			@Override
 			public final void run() {
-				if (final_pref_enable_network_auto_reconnect) {
-					final String result = autoReconnect(final_pref_enable_network_auto_reconnect_wifi, final_pref_enable_network_auto_reconnect_mobile);
-					if (result.equals("") == false) {
-						toast(isAutoTweet, context, result);
-					}
+				final String result = autoReconnect(final_pref_enable_network_auto_reconnect_wifi, final_pref_enable_network_auto_reconnect_mobile);
+				if (result.equals("") == false) {
+					toast(isAutoTweet, context, result);
 				}
 			}
 		}).start();
@@ -127,17 +122,14 @@ public final class CheckNetworkUtil {
 
 	public final void autoDisconnect_updatetweet() {
 		pref_app = PreferenceManager.getDefaultSharedPreferences(context);
-		final boolean pref_enable_network_auto_disconnect = pref_app.getBoolean("pref_enable_network_auto_disconnect", false);
 		final boolean pref_enable_network_auto_disconnect_wifi = pref_app.getBoolean("pref_enable_network_auto_disconnect_wifi", false);
 		final boolean pref_enable_network_auto_disconnect_mobile = pref_app.getBoolean("pref_enable_network_auto_disconnect_mobile", false);
 
-		if (pref_enable_network_auto_disconnect) {
-			if (pref_enable_network_auto_disconnect_wifi) {
-				setWifiEnabled(false);
-			}
-			if (pref_enable_network_auto_disconnect_mobile) {
-				setMobileDataEnabled(false);
-			}
+		if (pref_enable_network_auto_disconnect_wifi) {
+			setWifiEnabled(false);
+		}
+		if (pref_enable_network_auto_disconnect_mobile) {
+			setMobileDataEnabled(false);
 		}
 	}
 
